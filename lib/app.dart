@@ -1,0 +1,109 @@
+import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
+import 'package:budget_pro/domain/bloc/show_select_option.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import './presentation/screens/home.dart';
+import './presentation/screens/expenses.dart';
+import './presentation/screens/charts.dart';
+import './presentation/screens/exchanges.dart';
+
+class App extends StatefulWidget {
+  const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  List<Map<String, dynamic>> navIcons = [
+    {'icon': Icons.home_outlined, 'label': 'Home'},
+    {'icon': Icons.attach_money_outlined, 'label': 'Expenses'},
+    {'icon': Icons.pie_chart_outline, 'label': 'Charts'},
+    {'icon': Icons.currency_exchange, 'label': 'Exchanges'},
+  ];
+  List<Widget> screens = [Home(), Expenses(), Charts(), Exchanges()];
+  List<String> titles = ['Home', 'Expenses', 'Charts', 'Exchanges'];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: BlocBuilder<NavigatorCubit, int>(
+          builder: (context, state) {
+            return Text(
+              titles[state],
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+            );
+          },
+        ),
+
+        actions: [Icon(Icons.more_vert, size: 30)],
+        actionsPadding: EdgeInsets.only(right: 15),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.read<ShowSelectOption>().showOption(context);
+        },
+        shape: CircleBorder(),
+        backgroundColor: Color.fromARGB(255, 146, 61, 202),
+        child: Icon(Icons.add, color: Colors.white, size: 28),
+      ),
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+        child: BottomAppBar(
+          color: Color.fromARGB(255, 146, 61, 202),
+          shape: CircularNotchedRectangle(),
+          notchMargin: 7,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ...navIcons.sublist(0, 2).map((data) => _buildNavItem(data)),
+              const SizedBox(width: 48),
+              ...navIcons.sublist(2).map((data) => _buildNavItem(data)),
+            ],
+          ),
+        ),
+      ),
+      body: BlocBuilder<NavigatorCubit, int>(
+        builder: (context, index) {
+          return screens[index];
+        },
+      ),
+    );
+  }
+
+  Widget _buildNavItem(Map<String, dynamic> data) {
+    int index = navIcons.indexOf(data);
+    int currentIndex = context.watch<NavigatorCubit>().state;
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          context.read<NavigatorCubit>().setValue(index);
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              data['icon'],
+              color: currentIndex == index
+                  ? const Color.fromARGB(255, 233, 230, 59)
+                  : Colors.white,
+              size: 30,
+            ),
+            Text(
+              data['label'],
+              style: TextStyle(
+                color: currentIndex == index
+                    ? const Color.fromARGB(255, 233, 230, 59)
+                    : Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
