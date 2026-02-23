@@ -1,4 +1,5 @@
 import 'package:budget_pro/domain/bloc/date_selector.dart';
+import 'package:budget_pro/presentation/components/expenseItem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,6 +42,44 @@ class _ExpensesState extends State<Expenses> {
                 dateSelector(),
               ],
             ),
+            SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Total : 250.00',
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 58, 58, 58),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                    expenseItem(),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -81,7 +120,6 @@ class _ExpensesState extends State<Expenses> {
 
   //---------------date selector---------------
   Widget dateSelector() {
-    String selectedDate = context.watch<DateSelectorCubit>().state;
     return InkWell(
       onTap: () => context.read<DateSelectorCubit>().selectDate(context),
       child: Container(
@@ -100,12 +138,16 @@ class _ExpensesState extends State<Expenses> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Text(
-                selectedDate,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
+            BlocBuilder<DateSelectorCubit, String>(
+              builder: (context, date) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Text(
+                    date,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                );
+              },
             ),
             Icon(Icons.arrow_drop_down, size: 35),
           ],

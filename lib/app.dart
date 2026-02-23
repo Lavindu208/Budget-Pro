@@ -1,5 +1,5 @@
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
-import 'package:budget_pro/domain/bloc/show_select_option.dart';
+import 'package:budget_pro/domain/show_select_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './presentation/screens/home.dart';
@@ -23,6 +23,7 @@ class _AppState extends State<App> {
   ];
   List<Widget> screens = [Home(), Expenses(), Charts(), Exchanges()];
   List<String> titles = ['Home', 'Expenses', 'Charts', 'Exchanges'];
+  CheckScreen checkScreen = CheckScreen();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +43,7 @@ class _AppState extends State<App> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.read<ShowSelectOption>().showOption(context);
+          checkScreen.checkScreen(context);
         },
         shape: CircleBorder(),
         backgroundColor: Color.fromARGB(255, 146, 61, 202),
