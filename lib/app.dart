@@ -1,11 +1,12 @@
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
 import 'package:budget_pro/domain/show_select_option.dart';
+import 'package:budget_pro/presentation/appColors/app_colors.dart';
+import 'package:budget_pro/presentation/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './presentation/screens/home.dart';
 import './presentation/screens/expenses.dart';
 import './presentation/screens/charts.dart';
-import './presentation/screens/exchanges.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -19,10 +20,10 @@ class _AppState extends State<App> {
     {'icon': Icons.home_outlined, 'label': 'Home'},
     {'icon': Icons.attach_money_outlined, 'label': 'Expenses'},
     {'icon': Icons.pie_chart_outline, 'label': 'Charts'},
-    {'icon': Icons.currency_exchange, 'label': 'Exchanges'},
+    {'icon': Icons.person_outline, 'label': 'Profile'},
   ];
-  List<Widget> screens = [Home(), Expenses(), Charts(), Exchanges()];
-  List<String> titles = ['Home', 'Expenses', 'Charts', 'Exchanges'];
+  List<Widget> screens = [Home(), Expenses(), Charts(), Profile()];
+  List<String> titles = ['Home', 'Expenses', 'Charts', 'Profile'];
   CheckScreen checkScreen = CheckScreen();
   @override
   Widget build(BuildContext context) {
@@ -46,13 +47,13 @@ class _AppState extends State<App> {
           checkScreen.checkScreen(context);
         },
         shape: CircleBorder(),
-        backgroundColor: Color.fromARGB(255, 146, 61, 202),
+        backgroundColor: AppColors.navigatorColor,
         child: Icon(Icons.add, color: Colors.white, size: 28),
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
         child: BottomAppBar(
-          color: Color.fromARGB(255, 146, 61, 202),
+          color: AppColors.navigatorColor,
           shape: CircularNotchedRectangle(),
           notchMargin: 7,
           child: Row(

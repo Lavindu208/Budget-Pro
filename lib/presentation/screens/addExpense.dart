@@ -4,7 +4,6 @@ import 'package:budget_pro/presentation/components/custom_numpad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:budget_pro/presentation/components/custom_numpad_widget.dart';
 
 class AddExpense extends StatefulWidget {
   const AddExpense({super.key});
@@ -27,11 +26,15 @@ class _AddExpense extends State<AddExpense> {
     {'icon': FontAwesomeIcons.screwdriverWrench, 'category': 'Repair'},
     {'icon': FontAwesomeIcons.gift, 'category': 'Gift'},
     {'icon': FontAwesomeIcons.personSwimming, 'category': 'Sports'},
+    {'icon': FontAwesomeIcons.house, 'category': 'Home'},
+    {'icon': FontAwesomeIcons.key, 'category': 'Rental'},
+    {'icon': FontAwesomeIcons.bagShopping, 'category': 'Shopping'},
+    {'icon': FontAwesomeIcons.plus, 'category': 'Add New'},
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add New Expenses')),
+      appBar: AppBar(title: const Text('Select Item')),
       body: Column(
         children: [
           SizedBox(height: 10),
@@ -54,27 +57,39 @@ class _AddExpense extends State<AddExpense> {
     return InkWell(
       onTap: () {
         context.read<DisplayCategoryCubit>().displayCategory(categoryName);
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: false,
-          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
-          builder: (BuildContext context) {
-            return CustomNumpad();
-          },
-        );
+        if (categoryName != 'Add New') {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: false,
+            backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+            builder: (BuildContext context) {
+              return CustomNumpad();
+            },
+          );
+        }
       },
       child: Column(
         children: [
-          Container(
-            width: 55,
-            height: 55,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.boxGreen,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Icon(icon, color: Colors.white),
-          ),
+          categoryName == 'Add New'
+              ? Container(
+                  width: 55,
+                  height: 55,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 2),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Icon(icon, color: Colors.grey),
+                )
+              : Container(
+                  width: 55,
+                  height: 55,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.boxGreen,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Icon(icon, color: Colors.white),
+                ),
           SizedBox(height: 5),
           Expanded(
             child: Text(
