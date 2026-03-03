@@ -1,3 +1,4 @@
+import 'package:budget_pro/domain/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 void showOptionPopup(BuildContext context) {
@@ -12,13 +13,13 @@ void showOptionPopup(BuildContext context) {
             ListTile(
               title: Text("Add Expense"),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, AppRoutes.addExpense);
               },
             ),
             ListTile(
               title: Text("Add Income"),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, AppRoutes.addIncome);
               },
             ),
           ],

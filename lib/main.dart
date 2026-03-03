@@ -2,6 +2,7 @@ import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
 import 'package:budget_pro/presentation/screens/addExpense.dart';
+import 'package:budget_pro/presentation/screens/add_income.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app.dart';
@@ -30,8 +31,8 @@ class MyApp extends StatelessWidget {
       title: 'Budget Pro',
       home: App(),
       routes: {
-        // AppRoutes.home: (context) => const Home(),
         AppRoutes.addExpense: (context) => const AddExpense(),
+        AppRoutes.addIncome: (context) => const AddIncome(),
       },
     );
   }

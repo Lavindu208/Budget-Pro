@@ -1,4 +1,5 @@
 import 'package:budget_pro/domain/bloc/date_selector.dart';
+import 'package:budget_pro/domain/show_select_option.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:budget_pro/presentation/components/expenseItem.dart';
 import 'package:budget_pro/presentation/components/incomeItem.dart';
@@ -44,6 +45,10 @@ class _ExpensesState extends State<Expenses>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+      CheckScreen.tabIndex = _tabController.index;
+    });
   }
 
   @override

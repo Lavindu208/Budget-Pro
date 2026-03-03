@@ -5,36 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AddExpense extends StatefulWidget {
-  const AddExpense({super.key});
+class AddIncome extends StatefulWidget {
+  const AddIncome({super.key});
 
   @override
-  State<AddExpense> createState() => _AddExpense();
+  State<AddIncome> createState() => _AddIncome();
 }
 
-class _AddExpense extends State<AddExpense> {
-  List<Map<String, dynamic>> expenseItems = [
-    {'icon': FontAwesomeIcons.burger, 'category': 'Food'},
-    {'icon': FontAwesomeIcons.graduationCap, 'category': 'Education'},
-    {'icon': FontAwesomeIcons.headset, 'category': 'Entertainment'},
-    {'icon': FontAwesomeIcons.car, 'category': 'Transportation'},
-    {'icon': FontAwesomeIcons.motorcycle, 'category': 'vehicle'},
-    {'icon': FontAwesomeIcons.microchip, 'category': 'Electronics'},
-    {'icon': FontAwesomeIcons.plane, 'category': 'Travel'},
-    {'icon': FontAwesomeIcons.shirt, 'category': 'Clothing'},
-    {'icon': FontAwesomeIcons.circleDollarToSlot, 'category': 'Donation'},
-    {'icon': FontAwesomeIcons.screwdriverWrench, 'category': 'Repair'},
-    {'icon': FontAwesomeIcons.gift, 'category': 'Gift'},
-    {'icon': FontAwesomeIcons.personSwimming, 'category': 'Sports'},
-    {'icon': FontAwesomeIcons.house, 'category': 'Home'},
-    {'icon': FontAwesomeIcons.key, 'category': 'Rental'},
-    {'icon': FontAwesomeIcons.bagShopping, 'category': 'Shopping'},
+class _AddIncome extends State<AddIncome> {
+  List<Map<String, dynamic>> incomeItems = [
+    {'icon': FontAwesomeIcons.moneyBill, 'category': 'Salary'},
+    {'icon': FontAwesomeIcons.chartBar, 'category': 'Investments'},
+    {'icon': FontAwesomeIcons.clock, 'category': 'Part Time'},
     {'icon': FontAwesomeIcons.plus, 'category': 'Add New'},
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Item')),
+      appBar: AppBar(title: Text('Select Item')),
       body: Column(
         children: [
           SizedBox(height: 10),
@@ -43,8 +31,8 @@ class _AddExpense extends State<AddExpense> {
               crossAxisCount: 4,
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
-              children: expenseItems.map((item) {
-                return expensesCategoryItem(item['icon'], item['category']);
+              children: incomeItems.map((item) {
+                return incomeCategoryItem(item['icon'], item['category']);
               }).toList(),
             ),
           ),
@@ -53,10 +41,10 @@ class _AddExpense extends State<AddExpense> {
     );
   }
 
-  Widget expensesCategoryItem(IconData icon, String categoryName) {
+  Widget incomeCategoryItem(IconData icon, String categoryName) {
     return InkWell(
       onTap: () {
-        context.read<DisplayCategoryCubit>().displayExpenseCategory(
+        context.read<DisplayCategoryCubit>().displayIncomeCategory(
           categoryName,
         );
         if (categoryName != 'Add New') {
