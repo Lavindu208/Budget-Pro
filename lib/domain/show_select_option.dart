@@ -8,7 +8,7 @@ class CheckScreen {
   static int tabIndex = 0;
   void checkScreen(BuildContext context) {
     int currentPage = context.read<NavigatorCubit>().state;
-    if (currentPage == 0) {
+    if (currentPage != 1) {
       showOptionPopup(context);
     } else if (currentPage == 1 && tabIndex == 0) {
       Navigator.pushNamed(context, AppRoutes.addExpense);

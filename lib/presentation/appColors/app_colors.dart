@@ -6,3 +6,11 @@ class AppColors {
   static const Color boxGreen = Color.fromARGB(255, 66, 179, 96);
   static const Color navigatorColor = Color.fromARGB(255, 146, 61, 202);
 }
+
+class ChartColors {
+  static const Color red = Color(0xFFFB2727);
+  static const Color orange = Color(0xFFF2782C);
+  static const Color yellow = Color(0xFFE0D124);
+  static const Color lightGreen = Color(0xFF9EBC3E);
+  static const Color darkGreen = Color(0xFF56AD77);
+}

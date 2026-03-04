@@ -1,4 +1,5 @@
 import 'package:budget_pro/presentation/components/expenseItem.dart';
+import 'package:budget_pro/presentation/components/total_expense_and_income.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../appColors/app_colors.dart';
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20),
+                // SizedBox(height: 20),
                 // ---------------------Total balance-------------------
                 balance(),
                 SizedBox(height: 20),
@@ -193,118 +194,6 @@ class _HomeState extends State<Home> {
         ),
         Spacer(),
         Text('$percentValue%', style: TextStyle(fontWeight: FontWeight.w500)),
-      ],
-    );
-  }
-
-  Widget twoBoxes() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(
-          child: Container(
-            height: 100,
-            decoration: BoxDecoration(
-              color: AppColors.boxRed,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                // Optional: Adds a subtle shadow for depth
-                BoxShadow(
-                  color: const Color.fromARGB(66, 0, 0, 0),
-                  blurRadius: 12,
-                  offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '-5200.00',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      'LKR',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Total Expenses',
-                  style: TextStyle(fontSize: 13, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(width: 10),
-        SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            height: 100,
-            decoration: BoxDecoration(
-              color: AppColors.boxGreen,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                // Optional: Adds a subtle shadow for depth
-                BoxShadow(
-                  color: const Color.fromARGB(66, 0, 0, 0),
-                  blurRadius: 12,
-                  offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '+10000.00',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        'LKR',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Total Expenses',
-                    style: TextStyle(fontSize: 13, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }

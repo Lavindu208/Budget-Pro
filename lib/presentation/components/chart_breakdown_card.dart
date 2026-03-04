@@ -5,7 +5,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 Widget chartBreakDownCard() {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 5),
+    margin: EdgeInsets.symmetric(horizontal: 12),
     padding: EdgeInsets.all(10),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
