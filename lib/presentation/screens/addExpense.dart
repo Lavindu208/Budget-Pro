@@ -3,7 +3,7 @@ import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:budget_pro/presentation/components/custom_numpad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:budget_pro/data/models/expenses_categories.dart';
 
 class AddExpense extends StatefulWidget {
   const AddExpense({super.key});
@@ -13,24 +13,6 @@ class AddExpense extends StatefulWidget {
 }
 
 class _AddExpense extends State<AddExpense> {
-  List<Map<String, dynamic>> expenseItems = [
-    {'icon': FontAwesomeIcons.burger, 'category': 'Food'},
-    {'icon': FontAwesomeIcons.graduationCap, 'category': 'Education'},
-    {'icon': FontAwesomeIcons.headset, 'category': 'Entertainment'},
-    {'icon': FontAwesomeIcons.car, 'category': 'Transportation'},
-    {'icon': FontAwesomeIcons.motorcycle, 'category': 'vehicle'},
-    {'icon': FontAwesomeIcons.microchip, 'category': 'Electronics'},
-    {'icon': FontAwesomeIcons.plane, 'category': 'Travel'},
-    {'icon': FontAwesomeIcons.shirt, 'category': 'Clothing'},
-    {'icon': FontAwesomeIcons.circleDollarToSlot, 'category': 'Donation'},
-    {'icon': FontAwesomeIcons.screwdriverWrench, 'category': 'Repair'},
-    {'icon': FontAwesomeIcons.gift, 'category': 'Gift'},
-    {'icon': FontAwesomeIcons.personSwimming, 'category': 'Sports'},
-    {'icon': FontAwesomeIcons.house, 'category': 'Home'},
-    {'icon': FontAwesomeIcons.key, 'category': 'Rental'},
-    {'icon': FontAwesomeIcons.bagShopping, 'category': 'Shopping'},
-    {'icon': FontAwesomeIcons.plus, 'category': 'Add New'},
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +25,7 @@ class _AddExpense extends State<AddExpense> {
               crossAxisCount: 4,
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
-              children: expenseItems.map((item) {
+              children: ExpensesCategories.expenseItems.map((item) {
                 return expensesCategoryItem(item['icon'], item['category']);
               }).toList(),
             ),

@@ -188,20 +188,23 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 236, 236, 236),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 202, 202, 202),
-                    width: 1,
-                  ),
                 ),
                 child: DropdownButton<String>(
+                  underline: SizedBox(),
                   alignment: AlignmentDirectional.center,
-                  iconSize: 18,
+                  iconSize: 15,
                   icon: Icon(FontAwesomeIcons.arrowsUpDown),
                   value: selectedSortItem,
                   items: sortItems.map((String category) {
                     return DropdownMenuItem<String>(
                       value: category,
-                      child: Text(category),
+                      child: Text(
+                        category,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
                     );
                   }).toList(),
                   onChanged: (String? value) {
@@ -235,9 +238,6 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
               _incomePieChart(),
               SizedBox(height: 15),
               Container(
-                // decoration: BoxDecoration(
-                //   border: Border.all(color: Colors.black, width: 1),
-                // ),
                 alignment: Alignment.center,
                 width: 220,
                 child: _incomePieChartProperties(),

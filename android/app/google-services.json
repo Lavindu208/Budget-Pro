@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "559406782345",
+    "project_id": "budgetpro-a5d90",
+    "storage_bucket": "budgetpro-a5d90.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559406782345:android:e2cdd58e4e642408c63358",
+        "android_client_info": {
+          "package_name": "com.budgetpro.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjVetzhG2fd2-YQdoaibUhXvwQL4y9prA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

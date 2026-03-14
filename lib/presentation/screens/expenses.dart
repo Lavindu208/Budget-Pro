@@ -1,3 +1,6 @@
+import 'package:budget_pro/data/models/income_item.dart';
+import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
+import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
 import 'package:budget_pro/domain/show_select_option.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
@@ -46,7 +49,6 @@ class _ExpensesState extends State<Expenses>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging) return;
       CheckScreen.tabIndex = _tabController.index;
     });
   }
@@ -100,13 +102,17 @@ class _ExpensesState extends State<Expenses>
         ),
       ),
       child: DropdownButton<String>(
+        underline: SizedBox(),
         alignment: AlignmentDirectional.center,
-        iconSize: 35,
+        iconSize: 33,
         value: selectedExpenseCategoryValue,
         items: categories.map((String category) {
           return DropdownMenuItem<String>(
             value: category,
-            child: Text(category),
+            child: Text(
+              category,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+            ),
           );
         }).toList(),
         onChanged: (String? value) {
@@ -131,13 +137,17 @@ class _ExpensesState extends State<Expenses>
         ),
       ),
       child: DropdownButton<String>(
+        underline: SizedBox(),
         alignment: AlignmentDirectional.center,
-        iconSize: 35,
+        iconSize: 33,
         value: selectedIncomeCategoryValue,
         items: categories.map((String category) {
           return DropdownMenuItem<String>(
             value: category,
-            child: Text(category),
+            child: Text(
+              category,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+            ),
           );
         }).toList(),
         onChanged: (String? value) {
@@ -153,7 +163,7 @@ class _ExpensesState extends State<Expenses>
   Widget dateSelector() {
     return Container(
       padding: EdgeInsets.only(left: 10),
-      height: 35,
+      height: 33,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 231, 231, 231),
         borderRadius: BorderRadius.circular(10),
@@ -163,6 +173,7 @@ class _ExpensesState extends State<Expenses>
         ),
       ),
       child: DropdownButton<String>(
+        underline: SizedBox(),
         alignment: AlignmentDirectional.center,
         iconSize: 35,
         value: selectedSortValue,
@@ -176,7 +187,10 @@ class _ExpensesState extends State<Expenses>
               }
             },
             value: sortItem,
-            child: Text(sortItem),
+            child: Text(
+              sortItem,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+            ),
           );
         }).toList(),
         onChanged: (String? value) {
@@ -187,6 +201,8 @@ class _ExpensesState extends State<Expenses>
       ),
     );
   }
+
+  // ExpenseList expenseList = ExpenseList();
 
   Widget expenseTabbarView() {
     return Padding(
@@ -212,29 +228,21 @@ class _ExpensesState extends State<Expenses>
             ],
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                  expenseItem(),
-                ],
-              ),
+            child: BlocBuilder<AddNewExpenseBloc, List<dynamic>>(
+              builder: (context, items) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final listItem = items[index];
+                    return expenseItem(
+                      listItem.icon,
+                      listItem.categoryName,
+                      listItem.amount,
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
@@ -266,8 +274,21 @@ class _ExpensesState extends State<Expenses>
             ],
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(children: [incomeItem()]),
+            child: BlocBuilder<AddNewIncomeBloc, List<IncomeItem>>(
+              builder: (context, items) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final listItem = items[index];
+                    return incomeItem(
+                      listItem.icon,
+                      listItem.categoryName,
+                      listItem.amount,
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],

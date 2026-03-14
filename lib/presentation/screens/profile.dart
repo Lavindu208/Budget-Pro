@@ -91,7 +91,12 @@ class _ProfileState extends State<Profile> {
               ),
               features.featureList.indexOf(item) !=
                       features.featureList.length - 1
-                  ? SizedBox(height: 15, child: Divider())
+                  ? SizedBox(
+                      height: 15,
+                      child: Divider(
+                        color: const Color.fromARGB(255, 224, 224, 224),
+                      ),
+                    )
                   : SizedBox(),
             ],
           );
@@ -132,13 +137,17 @@ class _ProfileState extends State<Profile> {
                     Text(
                       featureName,
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-                Icon(FontAwesomeIcons.angleRight, size: 20),
+                Icon(
+                  FontAwesomeIcons.angleRight,
+                  size: 20,
+                  color: const Color.fromARGB(255, 85, 85, 85),
+                ),
               ],
             ),
           ),

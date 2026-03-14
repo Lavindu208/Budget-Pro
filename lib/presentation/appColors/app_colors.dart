@@ -14,3 +14,13 @@ class ChartColors {
   static const Color lightGreen = Color(0xFF9EBC3E);
   static const Color darkGreen = Color(0xFF56AD77);
 }
+
+class PieChartColors {
+  static const List<Color> chartColors = [
+    Color(0xFFFB2727),
+    Color(0xFFF2782C),
+    Color(0xFFE0D124),
+    Color(0xFF9EBC3E),
+    Color(0xFF56AD77),
+  ];
+}

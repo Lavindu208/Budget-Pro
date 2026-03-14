@@ -1,7 +1,10 @@
+import 'package:budget_pro/data/models/expense_item.dart';
+import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/presentation/components/expenseItem.dart';
 import 'package:budget_pro/presentation/components/total_expense_and_income.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../appColors/app_colors.dart';
 
 class Home extends StatefulWidget {
@@ -11,51 +14,67 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // ExpenseList expenseList = ExpenseList();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // SizedBox(height: 20),
-                // ---------------------Total balance-------------------
-                balance(),
-                SizedBox(height: 20),
-                // --------------------two boxes----------------------
-                twoBoxes(),
-                SizedBox(height: 20),
-                // ---------------------Top expenses-------------------
-                topExpenses(),
-                SizedBox(height: 10),
-                //---------------Recently added-------------------
-                SizedBox(height: 10),
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 10),
-                  child: Text(
-                    'Recently Added',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // SizedBox(height: 20),
+              // ---------------------Total balance-------------------
+              balance(),
+              SizedBox(height: 20),
+              // --------------------two boxes----------------------
+              twoBoxes(),
+              SizedBox(height: 20),
+              // ---------------------Top expenses-------------------
+              topExpenses(),
+              SizedBox(height: 10),
+              //---------------Recently added-------------------
+              SizedBox(height: 10),
+              Padding(
+                padding: EdgeInsetsGeometry.only(left: 10),
+                child: Text(
+                  'Recently Added',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(height: 15),
-
-                expenseItem(),
-                expenseItem(),
-                expenseItem(),
-                expenseItem(),
-              ],
-            ),
+              ),
+              SizedBox(height: 15),
+              Expanded(
+                child: BlocBuilder<AddNewExpenseBloc, List<dynamic>>(
+                  builder: (context, items) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final listItem = items[index];
+                        if (index < 4) {
+                          return expenseItem(
+                            listItem.icon,
+                            listItem.categoryName,
+                            listItem.amount,
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget balance() {
+  Column balance() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -88,7 +107,19 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget topExpenses() {
+  final List<Map<String, dynamic>> _pieChartData = [
+    {'value': 40.0, 'color': ChartColors.red, 'title': '40%'},
+    {'value': 35.0, 'color': ChartColors.orange, 'title': '35%'},
+    {'value': 25.0, 'color': ChartColors.yellow, 'title': '25%'},
+  ];
+
+  final List<Map<String, dynamic>> _pieChartProperties = [
+    {'color': ChartColors.red, 'category': 'Food', 'percentage': 40},
+    {'color': ChartColors.orange, 'category': 'Education', 'percentage': 35},
+    {'color': ChartColors.yellow, 'category': 'Sport', 'percentage': 25},
+  ];
+
+  Padding topExpenses() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -103,8 +134,8 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 180,
-                height: 180,
+                width: 150,
+                height: 150,
                 child: PieChart(
                   duration: Duration(milliseconds: 800),
                   curve: Curves.easeInOutCubic,
@@ -112,41 +143,19 @@ class _HomeState extends State<Home> {
                     centerSpaceRadius: double.nan,
                     startDegreeOffset: -90,
                     sectionsSpace: 2,
-                    sections: [
-                      PieChartSectionData(
-                        value: 40,
-                        color: AppColors.boxRed,
-                        title: '40%',
+                    sections: _pieChartData.map((item) {
+                      return PieChartSectionData(
+                        value: item['value'],
+                        color: item['color'],
+                        title: item['title'],
                         titleStyle: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                         radius: 20,
                         titlePositionPercentageOffset: -0.7,
-                      ),
-                      PieChartSectionData(
-                        value: 35,
-                        color: AppColors.boxBlue,
-                        title: '35%',
-                        titleStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        radius: 20,
-                        titlePositionPercentageOffset: -0.7,
-                      ),
-                      PieChartSectionData(
-                        value: 25,
-                        color: AppColors.boxGreen,
-                        title: '25%',
-                        titleStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        radius: 20,
-                        titlePositionPercentageOffset: -0.7,
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
@@ -154,13 +163,21 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: 140,
                 child: Column(
-                  children: [
-                    categoryWithPercentage(AppColors.boxRed, 'Food', 40),
-                    SizedBox(height: 8),
-                    categoryWithPercentage(AppColors.boxBlue, 'Education', 35),
-                    SizedBox(height: 8),
-                    categoryWithPercentage(AppColors.boxGreen, 'Food', 25),
-                  ],
+                  children: _pieChartProperties.map((item) {
+                    return Column(
+                      children: [
+                        categoryWithPercentage(
+                          item['color'],
+                          item['category'],
+                          item['percentage'],
+                        ),
+                        _pieChartProperties.indexOf(item) !=
+                                _pieChartProperties.length
+                            ? SizedBox(height: 8)
+                            : SizedBox(),
+                      ],
+                    );
+                  }).toList(),
                 ),
               ),
             ],
@@ -170,7 +187,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget categoryWithPercentage(
+  Row categoryWithPercentage(
     Color iconColor,
     String categoryName,
     int percentValue,

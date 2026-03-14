@@ -18,12 +18,12 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   List<Map<String, dynamic>> navIcons = [
     {'icon': Icons.home_outlined, 'label': 'Home'},
-    {'icon': Icons.attach_money_outlined, 'label': 'Expenses'},
+    {'icon': Icons.attach_money_outlined, 'label': 'Cashflow'},
     {'icon': Icons.pie_chart_outline, 'label': 'Charts'},
     {'icon': Icons.person_outline, 'label': 'Profile'},
   ];
   List<Widget> screens = [Home(), Expenses(), Charts(), Profile()];
-  List<String> titles = ['Home', 'Expenses', 'Charts', 'Profile'];
+  List<String> titles = ['Home', 'Cashflow', 'Charts', 'Profile'];
   CheckScreen checkScreen = CheckScreen();
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,7 @@ class _AppState extends State<App> {
                     ? const Color.fromARGB(255, 233, 230, 59)
                     : Colors.white,
                 fontSize: 12,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.normal,
               ),
             ),
           ],

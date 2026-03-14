@@ -1,4 +1,7 @@
+import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
+import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
+import 'package:budget_pro/domain/show_select_option.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,7 +106,26 @@ class _CustomNumpad extends State<CustomNumpad> {
                     ),
                     SizedBox(width: 5),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        int index = CheckScreen.tabIndex;
+                        index == 0
+                            ? context.read<AddNewExpenseBloc>().add(
+                                AddNewExpenseItem(
+                                  context.read<DisplayCategoryCubit>().state,
+                                  _pinController.text.trim(),
+                                  FontAwesomeIcons.brandsFontAwesome,
+                                ),
+                              )
+                            : context.read<AddNewIncomeBloc>().add(
+                                AddNewIncomeItem(
+                                  categoryName: context
+                                      .read<DisplayCategoryCubit>()
+                                      .state,
+                                  amount: _pinController.text.trim(),
+                                  icon: FontAwesomeIcons.brandsFontAwesome,
+                                ),
+                              );
+                      },
                       child: Container(
                         alignment: Alignment.center,
                         width: 60,
