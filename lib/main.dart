@@ -3,6 +3,8 @@ import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
+import 'package:budget_pro/domain/expense_repository.dart';
+import 'package:budget_pro/domain/income_repository.dart';
 import 'package:budget_pro/firebase_options.dart';
 import 'package:budget_pro/presentation/screens/addExpense.dart';
 import 'package:budget_pro/presentation/screens/add_income.dart';
@@ -16,15 +18,33 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    MultiBlocProvider(
+    MultiRepositoryProvider(
       providers: [
-        BlocProvider(create: (context) => NavigatorCubit()),
-        BlocProvider(create: (context) => DateSelectorCubit()),
-        BlocProvider(create: (context) => DisplayCategoryCubit()),
-        BlocProvider(create: (context) => AddNewExpenseBloc()),
-        BlocProvider(create: (context) => AddNewIncomeBloc()),
+        RepositoryProvider<ExpenseRepository>(
+          create: (context) => ExpenseRepository(),
+        ),
+        RepositoryProvider<IncomeRepository>(
+          create: (context) => IncomeRepository(),
+        ),
       ],
-      child: MyApp(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => NavigatorCubit()),
+          BlocProvider(create: (context) => DateSelectorCubit()),
+          BlocProvider(create: (context) => DisplayCategoryCubit()),
+          BlocProvider(
+            create: (context) =>
+                AddNewExpenseBloc(context.read<ExpenseRepository>())
+                  ..add(LoadExpenses()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                AddNewIncomeBloc(context.read<IncomeRepository>())
+                  ..add(LoadIncome()),
+          ),
+        ],
+        child: MyApp(),
+      ),
     ),
   );
 }

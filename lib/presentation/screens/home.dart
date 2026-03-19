@@ -1,4 +1,3 @@
-import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/presentation/components/expenseItem.dart';
 import 'package:budget_pro/presentation/components/total_expense_and_income.dart';

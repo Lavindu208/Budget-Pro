@@ -1,8 +1,11 @@
 import 'package:budget_pro/data/models/income_item.dart';
+import 'package:budget_pro/domain/income_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddNewIncomeItem {
+abstract class AddNewIncomeEvent {}
+
+class AddNewIncomeItem extends AddNewIncomeEvent {
   String categoryName;
   String amount;
   IconData icon;
@@ -14,22 +17,33 @@ class AddNewIncomeItem {
   });
 }
 
-class AddNewIncomeBloc extends Bloc<AddNewIncomeItem, List<IncomeItem>> {
-  AddNewIncomeBloc() : super([]) {
-    on<AddNewIncomeItem>((event, emit) {
+class LoadIncome extends AddNewIncomeEvent {}
+
+class AddNewIncomeBloc extends Bloc<AddNewIncomeEvent, List<IncomeItem>> {
+  IncomeRepository incomeRepository;
+  AddNewIncomeBloc(this.incomeRepository) : super([]) {
+    on<AddNewIncomeItem>((event, emit) async {
       final categoryName = event.categoryName;
       final amount = event.amount;
-      final icon = event.icon;
 
-      final newItem = IncomeItem(
-        icon: icon,
-        categoryName: categoryName,
-        amount: amount,
-      );
-      final currentItems = state;
+      try {
+        await incomeRepository.addData(categoryName, amount);
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+    });
 
-      final updatedList = [...currentItems, newItem];
-      emit(updatedList);
+    on<LoadIncome>((event, emit) async {
+      try {
+        await emit.forEach(
+          incomeRepository.getData(),
+          onData: (incomeList) {
+            return incomeList;
+          },
+        );
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     });
   }
 }

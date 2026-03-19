@@ -1,3 +1,4 @@
+import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:budget_pro/data/models/income_item.dart';
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
@@ -202,8 +203,6 @@ class _ExpensesState extends State<Expenses>
     );
   }
 
-  // ExpenseList expenseList = ExpenseList();
-
   Widget expenseTabbarView() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -228,8 +227,16 @@ class _ExpensesState extends State<Expenses>
             ],
           ),
           Expanded(
-            child: BlocBuilder<AddNewExpenseBloc, List<dynamic>>(
+            child: BlocBuilder<AddNewExpenseBloc, List<ExpenseItem>>(
               builder: (context, items) {
+                if (items.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No expenses yet. Add your first one!',
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
+                  );
+                }
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: items.length,
@@ -276,6 +283,14 @@ class _ExpensesState extends State<Expenses>
           Expanded(
             child: BlocBuilder<AddNewIncomeBloc, List<IncomeItem>>(
               builder: (context, items) {
+                if (items.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No income yet. Add your first one!',
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
+                  );
+                }
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: items.length,

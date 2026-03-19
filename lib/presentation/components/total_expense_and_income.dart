@@ -101,7 +101,7 @@ Widget twoBoxes() {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Total Expenses',
+                  'Total Income',
                   style: TextStyle(fontSize: 13, color: Colors.white),
                 ),
               ],

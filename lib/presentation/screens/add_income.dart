@@ -47,13 +47,15 @@ class _AddIncome extends State<AddIncome> {
         context.read<DisplayCategoryCubit>().displayIncomeCategory(
           categoryName,
         );
+        final currentRoute =
+            ModalRoute.of(context)?.settings.name ?? 'income_item';
         if (categoryName != 'Add New') {
           showModalBottomSheet(
             context: context,
             isScrollControlled: false,
             backgroundColor: const Color.fromARGB(0, 255, 255, 255),
             builder: (BuildContext context) {
-              return CustomNumpad();
+              return CustomNumpad(previousRoute: currentRoute);
             },
           );
         }

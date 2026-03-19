@@ -41,13 +41,15 @@ class _AddExpense extends State<AddExpense> {
         context.read<DisplayCategoryCubit>().displayExpenseCategory(
           categoryName,
         );
+        final currentRoute =
+            ModalRoute.of(context)?.settings.name ?? 'expense_item';
         if (categoryName != 'Add New') {
           showModalBottomSheet(
             context: context,
             isScrollControlled: false,
             backgroundColor: const Color.fromARGB(0, 255, 255, 255),
             builder: (BuildContext context) {
-              return CustomNumpad();
+              return CustomNumpad(previousRoute: currentRoute);
             },
           );
         }

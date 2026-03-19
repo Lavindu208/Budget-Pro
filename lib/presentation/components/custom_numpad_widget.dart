@@ -8,7 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomNumpad extends StatefulWidget {
-  const CustomNumpad({super.key});
+  final String previousRoute;
+  const CustomNumpad({super.key, required this.previousRoute});
 
   @override
   State<CustomNumpad> createState() => _CustomNumpad();
@@ -107,13 +108,13 @@ class _CustomNumpad extends State<CustomNumpad> {
                     SizedBox(width: 5),
                     InkWell(
                       onTap: () {
-                        int index = CheckScreen.tabIndex;
-                        index == 0
+                        widget.previousRoute == 'expense_item'
                             ? context.read<AddNewExpenseBloc>().add(
                                 AddNewExpenseItem(
                                   context.read<DisplayCategoryCubit>().state,
                                   _pinController.text.trim(),
                                   FontAwesomeIcons.brandsFontAwesome,
+                                  context,
                                 ),
                               )
                             : context.read<AddNewIncomeBloc>().add(
