@@ -1,12 +1,10 @@
+import 'package:budget_pro/data/models/navigation_list.dart';
+import 'package:budget_pro/domain/authentication/auth_repository.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
 import 'package:budget_pro/domain/show_select_option.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
-import 'package:budget_pro/presentation/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import './presentation/screens/home.dart';
-import './presentation/screens/expenses.dart';
-import './presentation/screens/charts.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -22,8 +20,9 @@ class _AppState extends State<App> {
     {'icon': Icons.pie_chart_outline, 'label': 'Charts'},
     {'icon': Icons.person_outline, 'label': 'Profile'},
   ];
-  List<Widget> screens = [Home(), Expenses(), Charts(), Profile()];
-  List<String> titles = ['Home', 'Cashflow', 'Charts', 'Profile'];
+  List<String> popupMenuOptions = ['Sign out'];
+  AuthRepository authRepository = AuthRepository();
+
   CheckScreen checkScreen = CheckScreen();
   @override
   Widget build(BuildContext context) {
@@ -32,13 +31,20 @@ class _AppState extends State<App> {
         title: BlocBuilder<NavigatorCubit, int>(
           builder: (context, state) {
             return Text(
-              titles[state],
+              NavigationList.titles[state],
               style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
             );
           },
         ),
 
-        actions: [Icon(Icons.more_vert, size: 30)],
+        actions: [
+          GestureDetector(
+            onTap: () {
+              authRepository.logOut();
+            },
+            child: Icon(Icons.more_vert, size: 30),
+          ),
+        ],
         actionsPadding: EdgeInsets.only(right: 15),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -69,7 +75,7 @@ class _AppState extends State<App> {
       ),
       body: BlocBuilder<NavigatorCubit, int>(
         builder: (context, index) {
-          return screens[index];
+          return NavigationList.screens[index];
         },
       ),
     );
@@ -103,6 +109,26 @@ class _AppState extends State<App> {
                 fontWeight: FontWeight.normal,
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ClipRRect bottomNavBar() {
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      child: BottomAppBar(
+        color: AppColors.navigatorColor,
+        shape: CircularNotchedRectangle(),
+        notchMargin: 7,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ...navIcons.sublist(0, 2).map((data) => _buildNavItem(data)),
+            const SizedBox(width: 48),
+            ...navIcons.sublist(2).map((data) => _buildNavItem(data)),
           ],
         ),
       ),

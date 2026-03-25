@@ -47,6 +47,14 @@ class _HomeState extends State<Home> {
               Expanded(
                 child: BlocBuilder<AddNewExpenseBloc, List<dynamic>>(
                   builder: (context, items) {
+                    if (items.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No recently added expenses.',
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       shrinkWrap: true,
                       itemCount: items.length,

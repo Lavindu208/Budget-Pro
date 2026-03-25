@@ -1,19 +1,27 @@
 import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ExpenseRepository {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> addData(String categoryName, String amount) async {
+    final String? uid = _auth.currentUser?.uid;
     Map<String, dynamic> expenseData = {
       'categoryName': categoryName,
       'amount': amount,
       'date': _calculateDate(),
+      'timestamp': FieldValue.serverTimestamp(),
     };
 
     try {
-      await db.collection("expenses").add(expenseData);
+      await _db
+          .collection('users')
+          .doc(uid)
+          .collection('expenses')
+          .add(expenseData);
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -24,9 +32,15 @@ class ExpenseRepository {
   }
 
   Stream<List<ExpenseItem>> getData() {
-    return db
+    final String? uid = _auth.currentUser?.uid;
+    if (uid == null) {
+      return const Stream.empty();
+    }
+    return _db
+        .collection('users')
+        // .orderBy('date', descending: true)
+        .doc(uid)
         .collection('expenses')
-        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
