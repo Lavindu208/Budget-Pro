@@ -1,4 +1,5 @@
 import 'package:budget_pro/data/models/expense_item.dart';
+import 'package:budget_pro/domain/authentication/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -52,5 +53,66 @@ class ExpenseRepository {
             );
           }).toList();
         });
+  }
+
+  List<String> filterItemsToDelete(
+    List<Map<String, dynamic>> docIdsWithTimestamp,
+    List<int> selectedItems,
+  ) {
+    List<String> docIds = [];
+
+    for (int index in selectedItems) {
+      docIds.add(docIdsWithTimestamp[index]['id']);
+    }
+
+    return docIds;
+  }
+
+  Future<List<Map<String, dynamic>>> getDocIdWithServerTimestamp(
+    String uid,
+    String collectionPath,
+  ) async {
+    final snapshot = await _db
+        .collection('users')
+        .doc(uid)
+        .collection(collectionPath)
+        .get();
+
+    List<Map<String, dynamic>> docIdsWithTimestamp = snapshot.docs.map((doc) {
+      final data = doc.data();
+      return {'id': doc.id, 'serverTimestamp': data['timestamp']};
+    }).toList();
+
+    return docIdsWithTimestamp;
+  }
+
+  Future<void> deleteData(
+    String collectionPath,
+    List<int> selectedItems,
+  ) async {
+    // get the user id from auth repository
+    String uid = AuthRepository().auth.currentUser!.uid;
+    List<Map<String, dynamic>> docIdsWithTimestamp =
+        await getDocIdWithServerTimestamp(uid, collectionPath);
+
+    List<String> docIds = filterItemsToDelete(
+      docIdsWithTimestamp,
+      selectedItems,
+    );
+    final batch = FirebaseFirestore.instance.batch();
+    final collection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection(collectionPath);
+    try {
+      for (String id in docIds) {
+        batch.delete(collection.doc(id));
+        debugPrint("Item id : $id");
+      }
+
+      await batch.commit();
+    } catch (e) {
+      debugPrint("Error deleting data : $e");
+    }
   }
 }

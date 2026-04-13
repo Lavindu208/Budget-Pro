@@ -1,7 +1,9 @@
+import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget twoBoxes() {
+Widget twoBoxes(BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
@@ -28,7 +30,7 @@ Widget twoBoxes() {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '-5200.00',
+                    '-${context.read<CalculateTotalExpenseCubit>().state}.00',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,

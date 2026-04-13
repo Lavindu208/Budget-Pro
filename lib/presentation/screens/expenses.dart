@@ -2,11 +2,15 @@ import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:budget_pro/data/models/income_item.dart';
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
+import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/select_expense_item.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
+import 'package:budget_pro/domain/bloc/show_action_buttons_cubit.dart';
 import 'package:budget_pro/domain/show_select_option.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:budget_pro/presentation/components/expenseItem.dart';
 import 'package:budget_pro/presentation/components/incomeItem.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -81,7 +85,7 @@ class _ExpensesState extends State<Expenses>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [expenseTabbarView(), incomeTabbarView()],
+              children: [expenseTabbarView(context), incomeTabbarView()],
             ),
           ),
         ],
@@ -112,7 +116,7 @@ class _ExpensesState extends State<Expenses>
             value: category,
             child: Text(
               category,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
             ),
           );
         }).toList(),
@@ -190,7 +194,7 @@ class _ExpensesState extends State<Expenses>
             value: sortItem,
             child: Text(
               sortItem,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
             ),
           );
         }).toList(),
@@ -203,57 +207,103 @@ class _ExpensesState extends State<Expenses>
     );
   }
 
-  Widget expenseTabbarView() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          SizedBox(height: 10),
-          Row(
+  Widget expenseTabbarView(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
             children: [
               expenseCategorySelector(expenseCategories),
               SizedBox(width: 10),
               dateSelector(),
             ],
           ),
-          SizedBox(height: 30),
-          Row(
+        ),
+        SizedBox(height: 30),
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                'Total : 250.00',
+                'Total : ${context.watch<CalculateTotalExpenseCubit>().state}.00',
                 style: TextStyle(color: const Color.fromARGB(255, 58, 58, 58)),
               ),
             ],
           ),
-          Expanded(
-            child: BlocBuilder<AddNewExpenseBloc, List<ExpenseItem>>(
-              builder: (context, items) {
-                if (items.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No expenses yet. Add your first one!',
-                      style: TextStyle(fontSize: 15, color: Colors.grey),
-                    ),
-                  );
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final listItem = items[index];
-                    return expenseItem(
-                      listItem.icon,
-                      listItem.categoryName,
-                      listItem.amount,
+        ),
+        Expanded(
+          child: BlocBuilder<AddNewExpenseBloc, List<ExpenseItem>>(
+            builder: (context, items) {
+              if (items.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No expenses yet. Add your first one!',
+                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                  ),
+                );
+              }
+              if (context.watch<SelectExpenseItem>().state.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return BlocBuilder<SelectExpenseItem, List<dynamic>>(
+                  builder: (context, selectedItems) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final listItem = items[index];
+                        bool isSelectedItem = index == selectedItems[index];
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              onLongPress: () {
+                                context
+                                    .read<SelectExpenseItem>()
+                                    .selectFirstItem(index);
+                                context
+                                    .read<ShowActionButtonsCubit>()
+                                    .showButtons();
+                              },
+                              onTap: () {
+                                context
+                                    .read<SelectExpenseItem>()
+                                    .selectMultipleItems(index);
+                                final itemList = context
+                                    .read<SelectExpenseItem>()
+                                    .items;
+                                context
+                                    .read<ShowActionButtonsCubit>()
+                                    .hideButtons(itemList);
+                              },
+                              child: expenseItem(
+                                listItem.icon,
+                                listItem.categoryName,
+                                listItem.amount,
+                                isSelectedItem ? true : false,
+                              ),
+                            ),
+                            if (index != items.length - 1)
+                              Divider(
+                                indent: 15,
+                                endIndent: 15,
+                                color: Color.fromARGB(255, 233, 233, 233),
+                                thickness: 1,
+                                height: 0,
+                              ),
+                          ],
+                        );
+                      },
                     );
                   },
                 );
-              },
-            ),
+              }
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

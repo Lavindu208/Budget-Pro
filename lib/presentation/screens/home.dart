@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
               balance(),
               SizedBox(height: 20),
               // --------------------two boxes----------------------
-              twoBoxes(),
+              twoBoxes(context),
               SizedBox(height: 20),
               // ---------------------Top expenses-------------------
               topExpenses(),
@@ -65,6 +65,7 @@ class _HomeState extends State<Home> {
                             listItem.icon,
                             listItem.categoryName,
                             listItem.amount,
+                            false,
                           );
                         } else {
                           return SizedBox();

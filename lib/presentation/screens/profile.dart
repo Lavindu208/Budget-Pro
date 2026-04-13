@@ -20,7 +20,7 @@ class _ProfileState extends State<Profile> {
           SizedBox(height: 10),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
-            child: twoBoxes(),
+            child: twoBoxes(context),
           ),
           SizedBox(height: 30),
           appFeatureList(),

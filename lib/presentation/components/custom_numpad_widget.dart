@@ -1,6 +1,7 @@
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
+import 'package:budget_pro/domain/bloc/select_expense_item.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -107,7 +108,6 @@ class _CustomNumpad extends State<CustomNumpad> {
                     SizedBox(width: 5),
                     InkWell(
                       onTap: () {
-                        print(widget.previousRoute);
                         widget.previousRoute == '/addExpense'
                             ? context.read<AddNewExpenseBloc>().add(
                                 AddNewExpenseItem(
@@ -126,6 +126,8 @@ class _CustomNumpad extends State<CustomNumpad> {
                                   icon: FontAwesomeIcons.brandsFontAwesome,
                                 ),
                               );
+                        // Add a item to selected item list in select expense item.
+                        context.read<SelectExpenseItem>().addItemToList();
                       },
                       child: Container(
                         alignment: Alignment.center,

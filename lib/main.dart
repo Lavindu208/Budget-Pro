@@ -3,8 +3,14 @@ import 'package:budget_pro/domain/authentication/auth_gate.dart';
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
+import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/create_init_list_cubit.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
+import 'package:budget_pro/domain/bloc/login_progress_indicator_cubit.dart';
+import 'package:budget_pro/domain/bloc/select_expense_item.dart';
+import 'package:budget_pro/domain/bloc/show_action_buttons_cubit.dart';
+import 'package:budget_pro/domain/bloc/signup_progress_indicator_cubit.dart';
 import 'package:budget_pro/domain/expense_repository.dart';
 import 'package:budget_pro/domain/income_repository.dart';
 import 'package:budget_pro/firebase_options.dart';
@@ -20,8 +26,15 @@ import './domain/routes/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(
-    MultiRepositoryProvider(
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<ExpenseRepository>(
           create: (context) => ExpenseRepository(),
@@ -35,10 +48,28 @@ void main() async {
           BlocProvider(create: (context) => NavigatorCubit()),
           BlocProvider(create: (context) => DateSelectorCubit()),
           BlocProvider(create: (context) => DisplayCategoryCubit()),
+          BlocProvider(create: (context) => LoginProgressIndicatorCubit()),
+          BlocProvider(create: (context) => SignupProgressIndicatorCubit()),
+          BlocProvider(create: (context) => ShowActionButtonsCubit()),
           BlocProvider(
             create: (context) =>
                 AddNewExpenseBloc(context.read<ExpenseRepository>())
                   ..add(LoadExpenses()),
+          ),
+          BlocProvider(
+            create: (context) => CalculateTotalExpenseCubit(
+              expensesList: context.read<AddNewExpenseBloc>().state,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => CreateInitListCubit(
+              initState: context.read<AddNewExpenseBloc>().state,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => SelectExpenseItem(
+              initState: context.read<CreateInitListCubit>().createInitList(),
+            ),
           ),
           BlocProvider(
             create: (context) =>
@@ -46,28 +77,19 @@ void main() async {
                   ..add(LoadIncome()),
           ),
         ],
-        child: MyApp(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Budget Pro',
+          home: AuthGate(),
+          routes: {
+            AppRoutes.addExpense: (context) => const AddExpense(),
+            AppRoutes.addIncome: (context) => const AddIncome(),
+            AppRoutes.signUp: (context) => const SignUp(),
+            AppRoutes.logIn: (context) => const LogIn(),
+            AppRoutes.app: (context) => const App(),
+          },
+        ),
       ),
-    ),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Budget Pro',
-      home: AuthGate(),
-      routes: {
-        AppRoutes.addExpense: (context) => const AddExpense(),
-        AppRoutes.addIncome: (context) => const AddIncome(),
-        AppRoutes.signUp: (context) => const SignUp(),
-        AppRoutes.logIn: (context) => const LogIn(),
-        AppRoutes.app: (context) => const App(),
-      },
     );
   }
 }

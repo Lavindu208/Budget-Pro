@@ -86,7 +86,7 @@ class _AddIncome extends State<AddIncome> {
           Expanded(
             child: Text(
               categoryName,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
             ),
           ),
         ],
