@@ -45,7 +45,7 @@ class _LogInState extends State<LogIn> {
                   opacity: 0.7,
                   child: ModalBarrier(dismissible: false, color: Colors.black),
                 ),
-                Center(child: CircularProgressIndicator()),
+                Center(child: CircularProgressIndicator(color: Colors.white)),
               ],
             ),
         ],

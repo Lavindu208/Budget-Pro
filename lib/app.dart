@@ -2,7 +2,8 @@ import 'package:budget_pro/data/models/navigation_list.dart';
 import 'package:budget_pro/domain/authentication/auth_repository.dart';
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
-import 'package:budget_pro/domain/bloc/select_expense_item.dart';
+import 'package:budget_pro/domain/bloc/select_expense_items_cubit.dart';
+import 'package:budget_pro/domain/bloc/select_income_items_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_action_buttons_cubit.dart';
 import 'package:budget_pro/domain/expense_repository.dart';
 import 'package:budget_pro/domain/show_select_option.dart';
@@ -52,30 +53,77 @@ class _AppState extends State<App> {
                           onTap: () {},
                           child: Icon(
                             FontAwesomeIcons.solidPenToSquare,
-                            size: 22,
+                            size: 21,
                             color: const Color.fromARGB(255, 90, 32, 216),
                           ),
                         ),
                         SizedBox(width: 15),
                         InkWell(
                           onTap: () {
-                            ExpenseRepository expenseRepository =
-                                ExpenseRepository();
-                            expenseRepository.deleteData(
-                              'expenses',
-                              context.read<SelectExpenseItem>().items,
-                            );
-                            int len = context
-                                .read<AddNewExpenseBloc>()
-                                .state
-                                .length;
-                            context.read<SelectExpenseItem>().createInitList(
-                              len,
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Confirm Action"),
+                                  content: Text(
+                                    "Are you sure you want to proceed?",
+                                  ),
+                                  actions: <Widget>[
+                                    // CANCEL BUTTON
+                                    TextButton(
+                                      child: Text("Cancel"),
+                                      onPressed: () {
+                                        Navigator.pop(
+                                          context,
+                                        ); // Closes the dialog
+                                      },
+                                    ),
+                                    // OK BUTTON
+                                    TextButton(
+                                      child: Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          color: Color.fromARGB(
+                                            255,
+                                            201,
+                                            30,
+                                            30,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        ExpenseRepository expenseRepository =
+                                            ExpenseRepository();
+                                        expenseRepository.deleteData(
+                                          'income',
+                                          context
+                                              .read<SelectIncomeItemsCubit>()
+                                              .selectedItems,
+                                        );
+                                        // int len = context
+                                        //     .read<AddNewExpenseBloc>()
+                                        //     .state
+                                        //     .length;
+                                        // context
+                                        //     .read<SelectExpenseItem>()
+                                        //     .createInitList(len);
+                                        context
+                                            .read<SelectIncomeItemsCubit>()
+                                            .initializedWithLoadData();
+                                        context
+                                            .read<ShowActionButtonsCubit>()
+                                            .hideButtons([]);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
                           child: Icon(
-                            FontAwesomeIcons.solidTrashCan,
-                            size: 22,
+                            FontAwesomeIcons.trash,
+                            size: 21,
                             color: const Color.fromARGB(255, 232, 55, 43),
                           ),
                         ),

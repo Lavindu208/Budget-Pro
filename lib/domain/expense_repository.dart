@@ -39,17 +39,20 @@ class ExpenseRepository {
     }
     return _db
         .collection('users')
-        // .orderBy('date', descending: true)
         .doc(uid)
         .collection('expenses')
+        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
             final data = doc.data();
             return ExpenseItem(
               icon: FontAwesomeIcons.addressCard,
-              categoryName: data['categoryName'],
-              amount: data['amount'],
+              categoryName: data['categoryName'] ?? 'Unknown',
+              amount: data['amount'] ?? '0',
+              timestamp: data['timestamp'] != null
+                  ? (data['timestamp'] as Timestamp).toDate()
+                  : DateTime.now(),
             );
           }).toList();
         });
@@ -57,12 +60,17 @@ class ExpenseRepository {
 
   List<String> filterItemsToDelete(
     List<Map<String, dynamic>> docIdsWithTimestamp,
-    List<int> selectedItems,
+    List<DateTime> selectedItems,
   ) {
     List<String> docIds = [];
 
-    for (int index in selectedItems) {
-      docIds.add(docIdsWithTimestamp[index]['id']);
+    for (DateTime timestamp in selectedItems) {
+      for (Map item in docIdsWithTimestamp) {
+        if (timestamp.isAtSameMomentAs(item['serverTimestamp'])) {
+          docIds.add(item['id']);
+          debugPrint("item matched");
+        }
+      }
     }
 
     return docIds;
@@ -80,7 +88,10 @@ class ExpenseRepository {
 
     List<Map<String, dynamic>> docIdsWithTimestamp = snapshot.docs.map((doc) {
       final data = doc.data();
-      return {'id': doc.id, 'serverTimestamp': data['timestamp']};
+      return {
+        'id': doc.id,
+        'serverTimestamp': (data['timestamp'] as Timestamp).toDate(),
+      };
     }).toList();
 
     return docIdsWithTimestamp;
@@ -88,7 +99,7 @@ class ExpenseRepository {
 
   Future<void> deleteData(
     String collectionPath,
-    List<int> selectedItems,
+    List<DateTime> selectedItems,
   ) async {
     // get the user id from auth repository
     String uid = AuthRepository().auth.currentUser!.uid;
@@ -107,7 +118,6 @@ class ExpenseRepository {
     try {
       for (String id in docIds) {
         batch.delete(collection.doc(id));
-        debugPrint("Item id : $id");
       }
 
       await batch.commit();

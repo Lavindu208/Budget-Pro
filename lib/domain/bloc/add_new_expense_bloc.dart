@@ -33,12 +33,16 @@ class AddNewExpenseBloc extends Bloc<AddNewExpenseEvent, List<ExpenseItem>> {
       }
     });
     on<LoadExpenses>((event, emit) async {
-      await emit.forEach(
-        expenseRepository.getData(),
-        onData: (expenseList) {
-          return expenseList;
-        },
-      );
+      try {
+        await emit.forEach(
+          expenseRepository.getData(),
+          onData: (expenseList) {
+            return expenseList;
+          },
+        );
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     });
   }
 
@@ -46,5 +50,3 @@ class AddNewExpenseBloc extends Bloc<AddNewExpenseEvent, List<ExpenseItem>> {
     Navigator.pop(context);
   }
 }
-
-class UpdateData {}

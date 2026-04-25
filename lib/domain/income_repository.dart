@@ -36,18 +36,21 @@ class IncomeRepository {
   Stream<List<IncomeItem>> getData() {
     String? uid = _auth.currentUser?.uid;
     return _db
-        .collection(_collectionName)
+        .collection('users')
         .doc(uid)
         .collection(_collectionName)
-        // .orderBy('date', descending: true)
+        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((docs) {
             final data = docs.data();
             return IncomeItem(
               icon: FontAwesomeIcons.addressBook,
-              categoryName: data['categoryName'],
-              amount: data['amount'],
+              categoryName: data['categoryName'] ?? 'Unknown',
+              amount: data['amount'] ?? '0',
+              timestamp: data['timestamp'] != null
+                  ? (data['timestamp'] as Timestamp).toDate()
+                  : DateTime.now(),
             );
           }).toList();
         });

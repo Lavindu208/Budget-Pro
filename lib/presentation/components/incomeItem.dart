@@ -1,38 +1,78 @@
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Widget incomeItem(IconData icon, String itemName, String amount) {
-  return Column(
-    children: [
-      Row(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 43,
-                height: 43,
-                decoration: BoxDecoration(
-                  color: AppColors.boxGreen,
-                  borderRadius: BorderRadius.circular(50),
+Container incomeItem(
+  IconData icon,
+  String itemName,
+  String amount,
+  bool isSelectedItem,
+) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    color: isSelectedItem
+        ? const Color.fromARGB(255, 241, 241, 241)
+        : Colors.transparent,
+    child: Column(
+      children: [
+        Row(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: AppColors.boxGreen,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Center(
+                        child: Icon(icon, color: Colors.white, size: 19),
+                      ),
+                    ),
+                    isSelectedItem
+                        ? Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 19,
+                                  height: 19,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                                Icon(
+                                  FontAwesomeIcons.solidCircleCheck,
+                                  size: 19,
+                                  color: AppColors.navigatorColor,
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+                  ],
                 ),
-                child: Center(child: Icon(icon, color: Colors.white)),
-              ),
-              SizedBox(width: 10),
-              Text(
-                itemName,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          Spacer(),
-          Text(
-            '$amount.00',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-      SizedBox(height: 15),
-    ],
+                SizedBox(width: 10),
+                Text(
+                  itemName,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            Spacer(),
+            Text(
+              '$amount.00',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ],
+    ),
   );
 }
