@@ -48,14 +48,22 @@ class _ExpensesState extends State<Expenses>
   String selectedExpenseCategoryValue = 'All';
   String selectedIncomeCategoryValue = 'All';
   String selectedSortValue = 'Today';
+  // int tabIndex = 0;
   late TabController _tabController;
+  TabController get tabController => _tabController;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      CheckScreen.tabIndex = _tabController.index;
+      CheckScreen.tabIndex = _tabController.animation!.value.round();
     });
+
+    // _tabController.animation!.addListener(() {
+    //   setState(() {
+    //     CheckScreen.tabIndex = _tabController.animation!.value.round();
+    //   });
+    // });
   }
 
   @override
@@ -245,10 +253,10 @@ class _ExpensesState extends State<Expenses>
                   ),
                 );
               }
-              if (context.watch<SelectExpenseItem>().state.isEmpty) {
+              if (context.watch<SelectExpenseItemCubit>().state.isEmpty) {
                 return const Center(child: CircularProgressIndicator());
               } else {
-                return BlocBuilder<SelectExpenseItem, List<dynamic>>(
+                return BlocBuilder<SelectExpenseItemCubit, List<dynamic>>(
                   builder: (context, selectedItems) {
                     return ListView.builder(
                       shrinkWrap: true,
@@ -261,22 +269,25 @@ class _ExpensesState extends State<Expenses>
                             GestureDetector(
                               onLongPress: () {
                                 context
-                                    .read<SelectExpenseItem>()
-                                    .selectFirstItem(index);
-                                // context
-                                //     .read<ShowActionButtonsCubit>()
-                                //     .showButtons();
+                                    .read<SelectExpenseItemCubit>()
+                                    .selectFirstItem(index, listItem.timestamp);
+                                context
+                                    .read<ShowActionButtonsCubit>()
+                                    .showButtons();
                               },
                               onTap: () {
                                 context
-                                    .read<SelectExpenseItem>()
-                                    .selectMultipleItems(index);
-                                // final itemList = context
-                                //     .read<SelectExpenseItem>()
-                                //     .items;
-                                // context
-                                //     .read<ShowActionButtonsCubit>()
-                                //     .hideButtons(itemList);
+                                    .read<SelectExpenseItemCubit>()
+                                    .selectMultipleItems(
+                                      index,
+                                      listItem.timestamp,
+                                    );
+                                final itemList = context
+                                    .read<SelectExpenseItemCubit>()
+                                    .selectedItems;
+                                context
+                                    .read<ShowActionButtonsCubit>()
+                                    .hideButtons(itemList);
                               },
                               child: expenseItem(
                                 listItem.icon,

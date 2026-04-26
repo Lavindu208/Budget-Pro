@@ -1,11 +1,10 @@
 import 'package:budget_pro/data/models/navigation_list.dart';
 import 'package:budget_pro/domain/authentication/auth_repository.dart';
-import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
 import 'package:budget_pro/domain/bloc/select_expense_items_cubit.dart';
 import 'package:budget_pro/domain/bloc/select_income_items_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_action_buttons_cubit.dart';
-import 'package:budget_pro/domain/expense_repository.dart';
+import 'package:budget_pro/domain/delete_expense_income_items.dart';
 import 'package:budget_pro/domain/show_select_option.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -91,15 +90,53 @@ class _AppState extends State<App> {
                                           ),
                                         ),
                                       ),
-                                      onPressed: () {
-                                        ExpenseRepository expenseRepository =
-                                            ExpenseRepository();
-                                        expenseRepository.deleteData(
-                                          'income',
-                                          context
-                                              .read<SelectIncomeItemsCubit>()
-                                              .selectedItems,
-                                        );
+                                      onPressed: () async {
+                                        int currentTabIdx =
+                                            CheckScreen.tabIndex;
+                                        DeleteExpenseIncomeItems
+                                        deleteExpenseIncomeItems =
+                                            DeleteExpenseIncomeItems();
+                                        if (currentTabIdx == 0) {
+                                          bool isDeleted =
+                                              await deleteExpenseIncomeItems
+                                                  .deleteData(
+                                                    'expenses',
+                                                    context
+                                                        .read<
+                                                          SelectExpenseItemCubit
+                                                        >()
+                                                        .selectedItems,
+                                                  );
+                                          if (context.mounted) {
+                                            if (isDeleted) {
+                                              context
+                                                  .read<
+                                                    SelectExpenseItemCubit
+                                                  >()
+                                                  .initializedWithLoadData();
+                                            }
+                                          }
+                                        } else {
+                                          bool isDeleted =
+                                              await deleteExpenseIncomeItems
+                                                  .deleteData(
+                                                    'income',
+                                                    context
+                                                        .read<
+                                                          SelectIncomeItemsCubit
+                                                        >()
+                                                        .selectedItems,
+                                                  );
+                                          if (context.mounted) {
+                                            if (isDeleted) {
+                                              context
+                                                  .read<
+                                                    SelectIncomeItemsCubit
+                                                  >()
+                                                  .initializedWithLoadData();
+                                            }
+                                          }
+                                        }
                                         // int len = context
                                         //     .read<AddNewExpenseBloc>()
                                         //     .state
@@ -107,13 +144,12 @@ class _AppState extends State<App> {
                                         // context
                                         //     .read<SelectExpenseItem>()
                                         //     .createInitList(len);
-                                        context
-                                            .read<SelectIncomeItemsCubit>()
-                                            .initializedWithLoadData();
-                                        context
-                                            .read<ShowActionButtonsCubit>()
-                                            .hideButtons([]);
-                                        Navigator.pop(context);
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                          context
+                                              .read<ShowActionButtonsCubit>()
+                                              .hideButtons([]);
+                                        }
                                       },
                                     ),
                                   ],

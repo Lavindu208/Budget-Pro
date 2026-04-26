@@ -4,7 +4,6 @@ import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
 import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
-import 'package:budget_pro/domain/bloc/create_init_list_cubit.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
 import 'package:budget_pro/domain/bloc/login_progress_indicator_cubit.dart';
@@ -64,11 +63,6 @@ class MyApp extends StatelessWidget {
             lazy: false,
           ),
           BlocProvider(
-            create: (context) => CreateInitListCubit(
-              initState: context.read<AddNewExpenseBloc>().state,
-            ),
-          ),
-          BlocProvider(
             create: (context) =>
                 AddNewIncomeBloc(context.read<IncomeRepository>())
                   ..add(LoadIncome()),
@@ -80,9 +74,10 @@ class MyApp extends StatelessWidget {
             lazy: false,
           ),
           BlocProvider(
-            create: (context) => SelectExpenseItem(
-              initState: context.read<CreateInitListCubit>().createInitList(),
-            ),
+            create: (context) => SelectExpenseItemCubit(
+              expenseItems: context.read<AddNewExpenseBloc>().state,
+            )..initializedWithLoadData(),
+            lazy: false,
           ),
         ],
         child: MaterialApp(
