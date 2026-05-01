@@ -1,4 +1,5 @@
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
+import 'package:budget_pro/domain/bloc/calculate_income_expense_balance_cubit.dart';
 import 'package:budget_pro/presentation/components/expenseItem.dart';
 import 'package:budget_pro/presentation/components/total_expense_and_income.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -62,8 +63,8 @@ class _HomeState extends State<Home> {
                         final listItem = items[index];
                         if (index < 4) {
                           return expenseItem(
-                            listItem.icon,
-                            listItem.categoryName,
+                            listItem.category.icon,
+                            listItem.category.label,
                             listItem.amount,
                             false,
                           );
@@ -92,13 +93,17 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              '4600.00',
-              style: TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 14, 64, 173),
-              ),
+            BlocBuilder<CalculateIncomeExpenseBalanceCubit, int>(
+              builder: (context, state) {
+                return Text(
+                  '$state.00',
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 14, 64, 173),
+                  ),
+                );
+              },
             ),
             SizedBox(width: 5),
             Text(

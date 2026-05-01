@@ -1,6 +1,7 @@
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
-import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_income_cubit.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -118,8 +119,8 @@ class _CustomNumpad extends State<CustomNumpad> {
                             ),
                           );
                           context
-                              .read<CalculateTotalExpenseCubit>()
-                              .calculateTotal();
+                              .read<ShowTotalExpenseCubit>()
+                              .showTotalExpense();
                         } else {
                           context.read<AddNewIncomeBloc>().add(
                             AddNewIncomeItem(
@@ -130,6 +131,9 @@ class _CustomNumpad extends State<CustomNumpad> {
                               icon: FontAwesomeIcons.brandsFontAwesome,
                             ),
                           );
+                          context
+                              .read<ShowTotalIncomeCubit>()
+                              .showTotalIncome();
                         }
                       },
                       child: Container(

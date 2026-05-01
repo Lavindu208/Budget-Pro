@@ -1,4 +1,5 @@
-import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_income_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,13 +30,17 @@ Widget twoBoxes(BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '-${context.read<CalculateTotalExpenseCubit>().state}.00',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  BlocBuilder<ShowTotalExpenseCubit, int>(
+                    builder: (context, state) {
+                      return Text(
+                        '-$state.00',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(width: 5),
                   Text(
@@ -82,13 +87,17 @@ Widget twoBoxes(BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '+10000.00',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    BlocBuilder<ShowTotalIncomeCubit, int>(
+                      builder: (context, state) {
+                        return Text(
+                          '+$state.00',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(width: 5),
                     Text(

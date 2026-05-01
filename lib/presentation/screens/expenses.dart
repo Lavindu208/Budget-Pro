@@ -2,7 +2,8 @@ import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:budget_pro/data/models/income_item.dart';
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
-import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_income_cubit.dart';
 import 'package:budget_pro/domain/bloc/select_expense_items_cubit.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
 import 'package:budget_pro/domain/bloc/select_income_items_cubit.dart';
@@ -235,9 +236,15 @@ class _ExpensesState extends State<Expenses>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                'Total : ${context.watch<CalculateTotalExpenseCubit>().state}.00',
-                style: TextStyle(color: const Color.fromARGB(255, 58, 58, 58)),
+              BlocBuilder<ShowTotalExpenseCubit, int>(
+                builder: (context, state) {
+                  return Text(
+                    'Total : $state.00',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 58, 58, 58),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -290,8 +297,8 @@ class _ExpensesState extends State<Expenses>
                                     .hideButtons(itemList);
                               },
                               child: expenseItem(
-                                listItem.icon,
-                                listItem.categoryName,
+                                listItem.category.icon,
+                                listItem.category.label,
                                 listItem.amount,
                                 isSelectedItem,
                               ),
@@ -338,9 +345,15 @@ class _ExpensesState extends State<Expenses>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                'Total : 250.00',
-                style: TextStyle(color: const Color.fromARGB(255, 58, 58, 58)),
+              BlocBuilder<ShowTotalIncomeCubit, int>(
+                builder: (context, state) {
+                  return Text(
+                    'Total : $state.00',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 58, 58, 58),
+                    ),
+                  );
+                },
               ),
             ],
           ),

@@ -3,7 +3,9 @@ import 'package:budget_pro/domain/authentication/auth_gate.dart';
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
-import 'package:budget_pro/domain/bloc/calculate_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/calculate_income_expense_balance_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_income_cubit.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
 import 'package:budget_pro/domain/bloc/login_progress_indicator_cubit.dart';
@@ -57,15 +59,22 @@ class MyApp extends StatelessWidget {
                   ..add(LoadExpenses()),
           ),
           BlocProvider(
-            create: (context) => CalculateTotalExpenseCubit(
-              expensesList: context.read<AddNewExpenseBloc>().state,
-            )..calculateTotal(),
+            create: (context) =>
+                AddNewIncomeBloc(context.read<IncomeRepository>())
+                  ..add(LoadIncome()),
+          ),
+          BlocProvider(
+            create: (context) => ShowTotalExpenseCubit()..showTotalExpense(),
+            lazy: false,
+          ),
+          BlocProvider(
+            create: (context) => ShowTotalIncomeCubit()..showTotalIncome(),
             lazy: false,
           ),
           BlocProvider(
             create: (context) =>
-                AddNewIncomeBloc(context.read<IncomeRepository>())
-                  ..add(LoadIncome()),
+                CalculateIncomeExpenseBalanceCubit()..calculateBalance(),
+            lazy: false,
           ),
           BlocProvider(
             create: (context) => SelectIncomeItemsCubit(
