@@ -6,7 +6,6 @@ import 'package:budget_pro/domain/bloc/select_income_items_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_action_buttons_cubit.dart';
 import 'package:budget_pro/domain/delete_expense_income_items.dart';
 import 'package:budget_pro/domain/show_select_option.dart';
-import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,7 +31,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 228, 228, 228),
+      backgroundColor: const Color.fromARGB(255, 238, 239, 245),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 238, 239, 245),
         title: BlocBuilder<NavigatorCubit, int>(

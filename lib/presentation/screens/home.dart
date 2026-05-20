@@ -1,5 +1,8 @@
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
-import 'package:budget_pro/presentation/components/expenseItem.dart';
+import 'package:budget_pro/domain/bloc/calculate_income_expense_balance_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_income_cubit.dart';
+import 'package:budget_pro/presentation/components/homescreen_expense_item.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,12 +66,10 @@ class _HomeState extends State<Home> {
                       itemBuilder: (context, index) {
                         final listItem = items[index];
                         if (index < 4) {
-                          return expenseItem(
+                          return homeScreenExpenseItem(
                             listItem.category.icon,
                             listItem.category.label,
                             listItem.amount,
-                            '',
-                            false,
                           );
                         } else {
                           return SizedBox();
@@ -132,9 +133,17 @@ class _HomeState extends State<Home> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        '4600.00',
-                        style: TextStyle(fontSize: 35, color: Colors.white),
+                      BlocBuilder<CalculateIncomeExpenseBalanceCubit, int>(
+                        builder: (context, state) {
+                          return Text(
+                            '$state.00',
+                            style: TextStyle(
+                              fontSize: 35,
+                              color: Colors.white,
+                              fontFamily: "Saira",
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(width: 3),
                       Padding(
@@ -186,12 +195,17 @@ class _HomeState extends State<Home> {
                                 ],
                               ),
                               SizedBox(height: 5),
-                              Text(
-                                '5000.00',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color.fromARGB(255, 242, 98, 88),
-                                ),
+                              BlocBuilder<ShowTotalExpenseCubit, int>(
+                                builder: (context, state) {
+                                  return Text(
+                                    '$state.00',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 242, 98, 88),
+                                      fontFamily: 'Saira',
+                                    ),
+                                  );
+                                },
                               ),
                               Text(
                                 'this month',
@@ -246,12 +260,17 @@ class _HomeState extends State<Home> {
                                 ],
                               ),
                               SizedBox(height: 5),
-                              Text(
-                                '7000.00',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color.fromARGB(255, 108, 244, 108),
-                                ),
+                              BlocBuilder<ShowTotalIncomeCubit, int>(
+                                builder: (context, state) {
+                                  return Text(
+                                    '$state.00',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 108, 244, 108),
+                                      fontFamily: 'Saira',
+                                    ),
+                                  );
+                                },
                               ),
                               Text(
                                 'this month',
@@ -281,15 +300,15 @@ class _HomeState extends State<Home> {
   }
 
   final List<Map<String, dynamic>> _pieChartData = [
-    {'value': 40.0, 'color': ChartColors.red, 'title': '40%'},
-    {'value': 35.0, 'color': ChartColors.orange, 'title': '35%'},
-    {'value': 25.0, 'color': ChartColors.yellow, 'title': '25%'},
+    {'value': 40.0, 'color': HomeCharColors.red, 'title': '40%'},
+    {'value': 35.0, 'color': HomeCharColors.blue, 'title': '35%'},
+    {'value': 25.0, 'color': HomeCharColors.green, 'title': '25%'},
   ];
 
   final List<Map<String, dynamic>> _pieChartProperties = [
-    {'color': ChartColors.red, 'category': 'Food', 'percentage': 40},
-    {'color': ChartColors.orange, 'category': 'Education', 'percentage': 35},
-    {'color': ChartColors.yellow, 'category': 'Sport', 'percentage': 25},
+    {'color': HomeCharColors.red, 'category': 'Food', 'percentage': 40},
+    {'color': HomeCharColors.blue, 'category': 'Education', 'percentage': 35},
+    {'color': HomeCharColors.green, 'category': 'Sport', 'percentage': 25},
   ];
 
   Container topExpenses() {

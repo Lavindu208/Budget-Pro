@@ -88,7 +88,11 @@ Widget expenseItem(
             Spacer(),
             Text(
               '$amount.00',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Saira',
+              ),
             ),
           ],
         ),

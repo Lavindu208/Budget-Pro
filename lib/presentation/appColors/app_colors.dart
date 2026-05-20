@@ -15,6 +15,12 @@ class ChartColors {
   static const Color darkGreen = Color(0xFF56AD77);
 }
 
+class HomeCharColors {
+  static const Color red = Color(0xFFF05959);
+  static const Color blue = Color(0xFF4063D7);
+  static const Color green = Color(0xFF42B360);
+}
+
 class PieChartColors {
   static const List<Color> chartColors = [
     Color(0xFFFB2727),

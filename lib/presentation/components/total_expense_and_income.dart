@@ -15,7 +15,6 @@ Widget twoBoxes(BuildContext context) {
             color: AppColors.boxRed,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
-              // Optional: Adds a subtle shadow for depth
               BoxShadow(
                 color: const Color.fromARGB(66, 0, 0, 0),
                 blurRadius: 12,
