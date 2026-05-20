@@ -1,10 +1,9 @@
 import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
-import 'package:budget_pro/domain/bloc/calculate_income_expense_balance_cubit.dart';
 import 'package:budget_pro/presentation/components/expenseItem.dart';
-import 'package:budget_pro/presentation/components/total_expense_and_income.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../appColors/app_colors.dart';
 
 class Home extends StatefulWidget {
@@ -25,14 +24,16 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // SizedBox(height: 20),
+              SizedBox(height: 5),
               // ---------------------Total balance-------------------
               balance(),
               SizedBox(height: 20),
-              // --------------------two boxes----------------------
-              twoBoxes(context),
-              SizedBox(height: 20),
               // ---------------------Top expenses-------------------
+              Text(
+                'Top Expenses',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 16),
               topExpenses(),
               SizedBox(height: 10),
               //---------------Recently added-------------------
@@ -66,6 +67,7 @@ class _HomeState extends State<Home> {
                             listItem.category.icon,
                             listItem.category.label,
                             listItem.amount,
+                            '',
                             false,
                           );
                         } else {
@@ -83,40 +85,198 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Column balance() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text('Total Balance', style: TextStyle(fontSize: 18)),
-        SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
+  Container balance() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: const Color.fromARGB(255, 27, 27, 27),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(25),
+        child: Stack(
           children: [
-            BlocBuilder<CalculateIncomeExpenseBalanceCubit, int>(
-              builder: (context, state) {
-                return Text(
-                  '$state.00',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 14, 64, 173),
-                  ),
-                );
-              },
+            Positioned(
+              right: -40,
+              top: -50,
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: const Color.fromARGB(255, 56, 56, 56),
+                ),
+              ),
             ),
-            SizedBox(width: 5),
-            Text(
-              'LKR',
-              style: TextStyle(
-                fontSize: 18,
-                color: const Color.fromARGB(255, 14, 64, 173),
-                fontWeight: FontWeight.w500,
+            Positioned(
+              left: 50,
+              bottom: -80,
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: const Color.fromARGB(255, 56, 56, 56),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'TOTAL BALANCE',
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '4600.00',
+                        style: TextStyle(fontSize: 35, color: Colors.white),
+                      ),
+                      SizedBox(width: 3),
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(bottom: 6),
+                        child: const Text(
+                          'LKR',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color.fromARGB(170, 89, 89, 89),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.arrowTrendDown,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      242,
+                                      98,
+                                      88,
+                                    ),
+                                    size: 15,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'EXPENSES',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                '5000.00',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color.fromARGB(255, 242, 98, 88),
+                                ),
+                              ),
+                              Text(
+                                'this month',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: const Color.fromARGB(
+                                    255,
+                                    132,
+                                    132,
+                                    132,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color.fromARGB(170, 89, 89, 89),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.arrowTrendUp,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      108,
+                                      244,
+                                      108,
+                                    ),
+                                    size: 15,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'INCOME',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                '7000.00',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color.fromARGB(255, 108, 244, 108),
+                                ),
+                              ),
+                              Text(
+                                'this month',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: const Color.fromARGB(
+                                    255,
+                                    132,
+                                    132,
+                                    132,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 
@@ -132,17 +292,16 @@ class _HomeState extends State<Home> {
     {'color': ChartColors.yellow, 'category': 'Sport', 'percentage': 25},
   ];
 
-  Padding topExpenses() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+  Container topExpenses() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 251, 251, 255),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      padding: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Top Expenses',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-          ),
-          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

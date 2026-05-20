@@ -8,12 +8,12 @@ abstract class AddNewIncomeEvent {}
 class AddNewIncomeItem extends AddNewIncomeEvent {
   String categoryName;
   String amount;
-  IconData icon;
+  String note;
 
   AddNewIncomeItem({
     required this.categoryName,
     required this.amount,
-    required this.icon,
+    required this.note,
   });
 }
 
@@ -25,9 +25,10 @@ class AddNewIncomeBloc extends Bloc<AddNewIncomeEvent, List<IncomeItem>> {
     on<AddNewIncomeItem>((event, emit) async {
       final categoryName = event.categoryName;
       final amount = event.amount;
+      final note = event.note;
 
       try {
-        await incomeRepository.addData(categoryName, amount);
+        await incomeRepository.addData(categoryName, amount, note);
       } catch (e) {
         debugPrint(e.toString());
       }

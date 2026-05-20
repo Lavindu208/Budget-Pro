@@ -300,6 +300,7 @@ class _ExpensesState extends State<Expenses>
                                 listItem.category.icon,
                                 listItem.category.label,
                                 listItem.amount,
+                                listItem.note,
                                 isSelectedItem,
                               ),
                             ),
@@ -403,9 +404,10 @@ class _ExpensesState extends State<Expenses>
                                   .hideButtons(itemList);
                             },
                             child: incomeItem(
-                              listItem.icon,
-                              listItem.categoryName,
+                              listItem.category.icon,
+                              listItem.category.label,
                               listItem.amount,
+                              listItem.note,
                               isSelectItem,
                             ),
                           ),

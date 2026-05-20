@@ -32,7 +32,9 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 228, 228),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 238, 239, 245),
         title: BlocBuilder<NavigatorCubit, int>(
           builder: (context, state) {
             return Text(
@@ -170,11 +172,9 @@ class _AppState extends State<App> {
           ),
 
           SizedBox(width: 15),
-          GestureDetector(
-            onTap: () {
-              authRepository.logOut();
-            },
-            child: Icon(Icons.more_vert, size: 30),
+          IconButton(
+            onPressed: authRepository.logOut,
+            icon: Icon(FontAwesomeIcons.ellipsisVertical, size: 25),
           ),
         ],
         actionsPadding: EdgeInsets.only(right: 15),
@@ -185,13 +185,13 @@ class _AppState extends State<App> {
           checkScreen.checkScreen(context);
         },
         shape: CircleBorder(),
-        backgroundColor: AppColors.navigatorColor,
+        backgroundColor: Colors.black,
         child: Icon(Icons.add, color: Colors.white, size: 28),
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
         child: BottomAppBar(
-          color: AppColors.navigatorColor,
+          color: Colors.white,
           shape: CircularNotchedRectangle(),
           notchMargin: 7,
           child: Row(
@@ -227,16 +227,16 @@ class _AppState extends State<App> {
             Icon(
               data['icon'],
               color: currentIndex == index
-                  ? const Color.fromARGB(255, 233, 230, 59)
-                  : Colors.white,
+                  ? const Color.fromARGB(255, 0, 0, 0)
+                  : const Color.fromARGB(255, 143, 143, 143),
               size: 30,
             ),
             Text(
               data['label'],
               style: TextStyle(
                 color: currentIndex == index
-                    ? const Color.fromARGB(255, 233, 230, 59)
-                    : Colors.white,
+                    ? const Color.fromARGB(255, 0, 0, 0)
+                    : const Color.fromARGB(255, 143, 143, 143),
                 fontSize: 12,
                 fontWeight: FontWeight.normal,
               ),
@@ -251,7 +251,7 @@ class _AppState extends State<App> {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       child: BottomAppBar(
-        color: AppColors.navigatorColor,
+        color: Colors.white,
         shape: CircularNotchedRectangle(),
         notchMargin: 7,
         child: Row(

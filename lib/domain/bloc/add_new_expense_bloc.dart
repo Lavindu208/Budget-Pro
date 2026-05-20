@@ -8,9 +8,9 @@ abstract class AddNewExpenseEvent {}
 class AddNewExpenseItem extends AddNewExpenseEvent {
   String categoryName;
   String amount;
-  IconData icon;
+  String note;
   BuildContext context;
-  AddNewExpenseItem(this.categoryName, this.amount, this.icon, this.context);
+  AddNewExpenseItem(this.categoryName, this.amount, this.note, this.context);
 }
 
 class LoadExpenses extends AddNewExpenseEvent {}
@@ -21,10 +21,11 @@ class AddNewExpenseBloc extends Bloc<AddNewExpenseEvent, List<ExpenseItem>> {
     on<AddNewExpenseItem>((event, emit) async {
       final categoryName = event.categoryName;
       final amount = event.amount;
+      final note = event.note;
       final context = event.context;
 
       try {
-        await expenseRepository.addData(categoryName, amount);
+        await expenseRepository.addData(categoryName, amount, note);
         if (context.mounted) {
           popScreen(context);
         }

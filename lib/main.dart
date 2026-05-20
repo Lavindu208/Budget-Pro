@@ -20,6 +20,7 @@ import 'package:budget_pro/presentation/screens/addExpense.dart';
 import 'package:budget_pro/presentation/screens/add_income.dart';
 import 'package:budget_pro/presentation/screens/log_in.dart';
 import 'package:budget_pro/presentation/screens/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,72 +37,96 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<ExpenseRepository>(
-          create: (context) => ExpenseRepository(),
-        ),
-        RepositoryProvider<IncomeRepository>(
-          create: (context) => IncomeRepository(),
-        ),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => NavigatorCubit()),
-          BlocProvider(create: (context) => DateSelectorCubit()),
-          BlocProvider(create: (context) => DisplayCategoryCubit()),
-          BlocProvider(create: (context) => LoginProgressIndicatorCubit()),
-          BlocProvider(create: (context) => SignupProgressIndicatorCubit()),
-          BlocProvider(create: (context) => ShowActionButtonsCubit()),
-          BlocProvider(
-            create: (context) =>
-                AddNewExpenseBloc(context.read<ExpenseRepository>())
-                  ..add(LoadExpenses()),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        return MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider<ExpenseRepository>(
+              create: (context) => ExpenseRepository(),
+            ),
+            RepositoryProvider<IncomeRepository>(
+              create: (context) => IncomeRepository(),
+            ),
+          ],
+          child: MultiBlocProvider(
+            key: ValueKey(user?.uid),
+            providers: [
+              BlocProvider(create: (context) => NavigatorCubit()),
+              BlocProvider(create: (context) => DateSelectorCubit()),
+              BlocProvider(create: (context) => DisplayCategoryCubit()),
+              BlocProvider(create: (context) => LoginProgressIndicatorCubit()),
+              BlocProvider(create: (context) => SignupProgressIndicatorCubit()),
+              BlocProvider(create: (context) => ShowActionButtonsCubit()),
+              if (user != null) ...[
+                BlocProvider(
+                  create: (context) =>
+                      AddNewExpenseBloc(context.read<ExpenseRepository>())
+                        ..add(LoadExpenses()),
+                ),
+                BlocProvider(
+                  create: (context) =>
+                      AddNewIncomeBloc(context.read<IncomeRepository>())
+                        ..add(LoadIncome()),
+                ),
+                BlocProvider(
+                  create: (context) =>
+                      ShowTotalExpenseCubit()..showTotalExpense(),
+                  lazy: false,
+                ),
+                BlocProvider(
+                  create: (context) =>
+                      ShowTotalIncomeCubit()..showTotalIncome(),
+                  lazy: false,
+                ),
+                BlocProvider(
+                  create: (context) =>
+                      CalculateIncomeExpenseBalanceCubit()..calculateBalance(),
+                  lazy: false,
+                ),
+                BlocProvider(
+                  create: (context) => SelectIncomeItemsCubit(
+                    incomeItems: context.read<AddNewIncomeBloc>().state,
+                  )..initializedWithLoadData(),
+                  lazy: false,
+                ),
+                BlocProvider(
+                  create: (context) => SelectExpenseItemCubit(
+                    expenseItems: context.read<AddNewExpenseBloc>().state,
+                  )..initializedWithLoadData(),
+                  lazy: false,
+                ),
+              ],
+            ],
+            child: MaterialApp(
+              theme: ThemeData(
+                scaffoldBackgroundColor: const Color.fromARGB(
+                  255,
+                  238,
+                  239,
+                  245,
+                ),
+                useMaterial3: true,
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.black,
+                  surface: Colors.white,
+                ),
+              ),
+              debugShowCheckedModeBanner: false,
+              title: 'Budget Pro',
+              home: const AuthGate(),
+              routes: {
+                AppRoutes.addExpense: (context) => const AddExpense(),
+                AppRoutes.addIncome: (context) => const AddIncome(),
+                AppRoutes.signUp: (context) => const SignUp(),
+                AppRoutes.logIn: (context) => const LogIn(),
+                AppRoutes.app: (context) => const App(),
+              },
+            ),
           ),
-          BlocProvider(
-            create: (context) =>
-                AddNewIncomeBloc(context.read<IncomeRepository>())
-                  ..add(LoadIncome()),
-          ),
-          BlocProvider(
-            create: (context) => ShowTotalExpenseCubit()..showTotalExpense(),
-            lazy: false,
-          ),
-          BlocProvider(
-            create: (context) => ShowTotalIncomeCubit()..showTotalIncome(),
-            lazy: false,
-          ),
-          BlocProvider(
-            create: (context) =>
-                CalculateIncomeExpenseBalanceCubit()..calculateBalance(),
-            lazy: false,
-          ),
-          BlocProvider(
-            create: (context) => SelectIncomeItemsCubit(
-              incomeItems: context.read<AddNewIncomeBloc>().state,
-            )..initializedWithLoadData(),
-            lazy: false,
-          ),
-          BlocProvider(
-            create: (context) => SelectExpenseItemCubit(
-              expenseItems: context.read<AddNewExpenseBloc>().state,
-            )..initializedWithLoadData(),
-            lazy: false,
-          ),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Budget Pro',
-          home: AuthGate(),
-          routes: {
-            AppRoutes.addExpense: (context) => const AddExpense(),
-            AppRoutes.addIncome: (context) => const AddIncome(),
-            AppRoutes.signUp: (context) => const SignUp(),
-            AppRoutes.logIn: (context) => const LogIn(),
-            AppRoutes.app: (context) => const App(),
-          },
-        ),
-      ),
+        );
+      },
     );
   }
 }

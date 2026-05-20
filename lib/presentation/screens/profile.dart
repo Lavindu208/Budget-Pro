@@ -1,5 +1,6 @@
 import 'package:budget_pro/data/app_feature_list.dart';
 import 'package:budget_pro/presentation/components/total_expense_and_income.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -11,12 +12,26 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  User? user = FirebaseAuth.instance.currentUser;
+  String? getFirstName() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null && user.email != null) {
+      String emailPrefix = user.email!.split('@').first;
+
+      String firstName = emailPrefix.split('.').first;
+
+      return firstName[0].toUpperCase() + firstName.substring(1).toLowerCase();
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    String? email = user?.email;
     return Scaffold(
       body: Column(
         children: [
-          profileDetails(),
+          profileDetails(email, getFirstName()),
           SizedBox(height: 10),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
@@ -29,7 +44,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  SizedBox profileDetails() {
+  SizedBox profileDetails(String? email, String? userName) {
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -46,11 +61,11 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           Text(
-            'User',
+            '$userName',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           ),
           Text(
-            'User@gmail.com',
+            '$email',
             style: TextStyle(
               fontSize: 15,
               color: const Color.fromARGB(255, 82, 82, 82),

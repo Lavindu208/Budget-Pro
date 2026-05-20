@@ -1,6 +1,6 @@
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
-import 'package:budget_pro/presentation/components/custom_numpad_widget.dart';
+import 'package:budget_pro/presentation/screens/numpad_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budget_pro/data/models/expenses_categories.dart';
@@ -41,15 +41,20 @@ class _AddExpense extends State<AddExpense> {
         context.read<DisplayCategoryCubit>().displayExpenseCategory(
           categoryName,
         );
-        final currentRoute =
+        final previousRoute =
             ModalRoute.of(context)?.settings.name ?? 'expense_item';
         if (categoryName != 'Add New') {
           showModalBottomSheet(
             context: context,
-            isScrollControlled: false,
-            backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+            isScrollControlled: true,
+            backgroundColor: const Color.fromARGB(255, 15, 15, 15),
             builder: (BuildContext context) {
-              return CustomNumpad(previousRoute: currentRoute);
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: NumpadScreen(previousRoute: previousRoute),
+              );
             },
           );
         }

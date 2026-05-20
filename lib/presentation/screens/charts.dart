@@ -65,7 +65,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
           padding: EdgeInsets.all(20),
           margin: EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 235, 235, 235),
+            color: const Color.fromARGB(255, 252, 253, 255),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -186,7 +186,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
                 padding: EdgeInsets.only(left: 10),
                 height: 35,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 236, 236, 236),
+                  color: const Color.fromARGB(255, 252, 252, 255),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: DropdownButton<String>(

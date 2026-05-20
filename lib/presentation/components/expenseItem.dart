@@ -6,6 +6,7 @@ Widget expenseItem(
   IconData icon,
   String itemName,
   String amount,
+  String note,
   bool isSelectedItem,
 ) {
   return Container(
@@ -59,9 +60,28 @@ Widget expenseItem(
                   ],
                 ),
                 SizedBox(width: 10),
-                Text(
-                  itemName,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      itemName,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    note == 'unknown'
+                        ? SizedBox()
+                        : Text(
+                            note,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: const Color.fromARGB(255, 122, 122, 122),
+                            ),
+                          ),
+                  ],
                 ),
               ],
             ),

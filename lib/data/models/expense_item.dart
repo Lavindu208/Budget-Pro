@@ -5,11 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ExpenseItem {
   final ExpenseCategory category;
   String amount;
+  String note;
   DateTime timestamp;
 
   ExpenseItem({
     required this.category,
     required this.amount,
+    required this.note,
     required this.timestamp,
   });
 
@@ -17,6 +19,7 @@ class ExpenseItem {
     return ExpenseItem(
       category: ExpenseCategory.fromString(data['categoryName']),
       amount: data['amount'] ?? '0',
+      note: data['note'] ?? 'unknown',
       timestamp: data['timestamp'] != null
           ? (data['timestamp'] as Timestamp).toDate()
           : DateTime.now(),
@@ -44,7 +47,7 @@ enum ExpenseCategory {
   gift(FontAwesomeIcons.gift, 'Gift'),
   sports(FontAwesomeIcons.personSwimming, 'Sports'),
   home(FontAwesomeIcons.house, 'Home'),
-  key(FontAwesomeIcons.key, 'Rental'),
+  rental(FontAwesomeIcons.key, 'Rental'),
   shopping(FontAwesomeIcons.bagShopping, 'Shopping'),
   addNew(FontAwesomeIcons.plus, 'Add New'),
   unknown(FontAwesomeIcons.question, 'Unknown');

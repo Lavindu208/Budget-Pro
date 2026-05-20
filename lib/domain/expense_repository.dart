@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 class ExpenseRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  Future<void> addData(String categoryName, String amount) async {
+  Future<void> addData(String categoryName, String amount, String note) async {
     final String? uid = _auth.currentUser?.uid;
     Map<String, dynamic> expenseData = {
       'categoryName': categoryName,
       'amount': amount,
+      'note': note,
       'timestamp': FieldValue.serverTimestamp(),
     };
 
@@ -34,7 +35,7 @@ class ExpenseRepository {
         .collection('users')
         .doc(uid)
         .collection('expenses')
-        .orderBy('date', descending: true)
+        .orderBy('timestamp', descending: true)
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {

@@ -1,6 +1,6 @@
 import 'package:budget_pro/domain/bloc/display_category_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
-import 'package:budget_pro/presentation/components/custom_numpad_widget.dart';
+import 'package:budget_pro/presentation/screens/numpad_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,7 +16,7 @@ class _AddIncome extends State<AddIncome> {
   List<Map<String, dynamic>> incomeItems = [
     {'icon': FontAwesomeIcons.moneyBill, 'category': 'Salary'},
     {'icon': FontAwesomeIcons.chartBar, 'category': 'Investments'},
-    {'icon': FontAwesomeIcons.clock, 'category': 'Part Time'},
+    {'icon': FontAwesomeIcons.clock, 'category': 'PartTime'},
     {'icon': FontAwesomeIcons.plus, 'category': 'Add New'},
   ];
   @override
@@ -47,15 +47,20 @@ class _AddIncome extends State<AddIncome> {
         context.read<DisplayCategoryCubit>().displayIncomeCategory(
           categoryName,
         );
-        final currentRoute =
+        final previousRoute =
             ModalRoute.of(context)?.settings.name ?? 'income_item';
         if (categoryName != 'Add New') {
           showModalBottomSheet(
             context: context,
-            isScrollControlled: false,
-            backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+            backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+            isScrollControlled: true,
             builder: (BuildContext context) {
-              return CustomNumpad(previousRoute: currentRoute);
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: NumpadScreen(previousRoute: previousRoute),
+              );
             },
           );
         }
