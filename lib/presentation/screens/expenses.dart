@@ -102,7 +102,7 @@ class _ExpensesState extends State<Expenses>
     );
   }
 
-  //--------------category selector------------------
+  //------------------category selector------------------
   Widget expenseCategorySelector(List<String> categories) {
     return Container(
       padding: EdgeInsets.only(left: 10),
@@ -242,6 +242,8 @@ class _ExpensesState extends State<Expenses>
                     'Total : $state.00',
                     style: TextStyle(
                       color: const Color.fromARGB(255, 58, 58, 58),
+                      fontFamily: 'Saira',
+                      fontSize: 15,
                     ),
                   );
                 },
@@ -308,7 +310,7 @@ class _ExpensesState extends State<Expenses>
                               Divider(
                                 indent: 15,
                                 endIndent: 15,
-                                color: Color.fromARGB(255, 233, 233, 233),
+                                color: Color.fromARGB(255, 224, 224, 224),
                                 thickness: 1,
                                 height: 0,
                               ),

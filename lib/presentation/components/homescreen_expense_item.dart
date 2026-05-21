@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-Column homeScreenExpenseItem(IconData icon, String category, String amount) {
+Column homeScreenExpenseItem(
+  IconData icon,
+  String category,
+  String note,
+  String amount,
+) {
   return Column(
     children: [
       Container(
@@ -25,7 +30,19 @@ Column homeScreenExpenseItem(IconData icon, String category, String amount) {
               ),
             ),
             SizedBox(width: 10),
-            Text(category, style: TextStyle(fontSize: 16)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(note, style: TextStyle(fontSize: 16)),
+                Text(
+                  category,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: const Color.fromARGB(255, 113, 113, 113),
+                  ),
+                ),
+              ],
+            ),
             Spacer(),
             Text(
               '-$amount.00',

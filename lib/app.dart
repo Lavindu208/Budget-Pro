@@ -227,7 +227,7 @@ class _AppState extends State<App> {
               data['icon'],
               color: currentIndex == index
                   ? const Color.fromARGB(255, 0, 0, 0)
-                  : const Color.fromARGB(255, 143, 143, 143),
+                  : const Color.fromARGB(255, 175, 175, 175),
               size: 30,
             ),
             Text(
@@ -235,7 +235,7 @@ class _AppState extends State<App> {
               style: TextStyle(
                 color: currentIndex == index
                     ? const Color.fromARGB(255, 0, 0, 0)
-                    : const Color.fromARGB(255, 143, 143, 143),
+                    : const Color.fromARGB(255, 175, 175, 175),
                 fontSize: 12,
                 fontWeight: FontWeight.normal,
               ),

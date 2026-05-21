@@ -12,7 +12,7 @@ Container incomeItem(
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
     color: isSelectedItem
-        ? const Color.fromARGB(255, 241, 241, 241)
+        ? const Color.fromARGB(255, 252, 252, 255)
         : Colors.transparent,
     child: Column(
       children: [

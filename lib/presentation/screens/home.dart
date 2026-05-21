@@ -7,6 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../appColors/app_colors.dart';
 
 class Home extends StatefulWidget {
@@ -17,40 +18,51 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // ExpenseList expenseList = ExpenseList();
+
   @override
   Widget build(BuildContext context) {
+    final AppBar appBar = AppBar(title: const Text('Height Calculation'));
+    double screenHeight() {
+      double totalHeight = MediaQuery.of(context).size.height;
+      double statusBarHeight = MediaQuery.of(context).padding.top;
+      double appBarHeight = appBar.preferredSize.height;
+      double availableHeight =
+          totalHeight - statusBarHeight - appBarHeight - 50;
+      return availableHeight;
+    }
+
     return Scaffold(
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 5),
-              // ---------------------Total balance-------------------
-              balance(),
-              SizedBox(height: 20),
-              // ---------------------Top expenses-------------------
-              Text(
-                'Top Expenses',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: 16),
-              topExpenses(),
-              SizedBox(height: 10),
-              //---------------Recently added-------------------
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsetsGeometry.only(left: 10),
-                child: Text(
-                  'Recently Added',
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: screenHeight(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                // ---------------------Total balance-------------------
+                balance(),
+                SizedBox(height: 20),
+                // ---------------------Top expenses-------------------
+                Text(
+                  'Top Expenses',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
-              ),
-              SizedBox(height: 15),
-              Expanded(
-                child: BlocBuilder<AddNewExpenseBloc, List<dynamic>>(
+                SizedBox(height: 16),
+                topExpenses(),
+                SizedBox(height: 10),
+                //---------------Recently added-------------------
+                SizedBox(height: 10),
+                Padding(
+                  padding: EdgeInsetsGeometry.only(left: 10),
+                  child: Text(
+                    'Recently Added',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                SizedBox(height: 15),
+                BlocBuilder<AddNewExpenseBloc, List<dynamic>>(
                   builder: (context, items) {
                     if (items.isEmpty) {
                       return const Center(
@@ -69,6 +81,7 @@ class _HomeState extends State<Home> {
                           return homeScreenExpenseItem(
                             listItem.category.icon,
                             listItem.category.label,
+                            listItem.note,
                             listItem.amount,
                           );
                         } else {
@@ -78,8 +91,8 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -378,30 +391,50 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Row categoryWithPercentage(
+  Column categoryWithPercentage(
     Color iconColor,
     String categoryName,
     int percentValue,
   ) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 15,
-              height: 15,
-              decoration: BoxDecoration(
-                color: iconColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 15,
+                  height: 15,
+                  decoration: BoxDecoration(
+                    color: iconColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                SizedBox(width: 5),
+                Text(categoryName),
+              ],
             ),
-            SizedBox(width: 5),
-            Text(categoryName),
+            Spacer(),
+            Text(
+              '$percentValue%',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
           ],
         ),
-        Spacer(),
-        Text('$percentValue%', style: TextStyle(fontWeight: FontWeight.w500)),
+        SizedBox(height: 5),
+        LinearPercentIndicator(
+          animation: true,
+          curve: Curves.easeOut,
+          animationDuration: 1000,
+          lineHeight: 6,
+          padding: EdgeInsets.zero,
+          percent: 0.4,
+          backgroundColor: const Color.fromARGB(255, 233, 233, 233),
+          progressColor: iconColor,
+          barRadius: Radius.circular(10),
+        ),
       ],
     );
   }
