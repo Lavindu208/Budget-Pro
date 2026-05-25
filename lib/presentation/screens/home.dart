@@ -26,8 +26,7 @@ class _HomeState extends State<Home> {
       double totalHeight = MediaQuery.of(context).size.height;
       double statusBarHeight = MediaQuery.of(context).padding.top;
       double appBarHeight = appBar.preferredSize.height;
-      double availableHeight =
-          totalHeight - statusBarHeight - appBarHeight - 50;
+      double availableHeight = totalHeight - statusBarHeight - appBarHeight;
       return availableHeight;
     }
 

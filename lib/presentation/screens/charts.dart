@@ -1,7 +1,9 @@
+import 'package:budget_pro/domain/bloc/show_details_on_chart_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:budget_pro/presentation/components/chart_breakdown_card.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Charts extends StatefulWidget {
@@ -100,27 +102,41 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
     return SizedBox(
       width: 210,
       height: 210,
-      child: PieChart(
-        duration: Duration(milliseconds: 800),
-        curve: Curves.easeInOutCubic,
-        PieChartData(
-          centerSpaceRadius: double.nan,
-          startDegreeOffset: -90,
-          sectionsSpace: 2,
-          sections: expensePieChartData.map((item) {
-            return PieChartSectionData(
-              value: item['value'],
-              color: item['color'],
-              title: item['title'],
-              titleStyle: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+      child: BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+        builder: (context, state) {
+          if (state is DataInit) {
+            return CircularProgressIndicator();
+          } else if (state is DataLoading) {
+            return CircularProgressIndicator();
+          } else if (state is DataLoaded) {
+            List<Map<String, dynamic>> data = state.chartDataList;
+
+            return PieChart(
+              duration: Duration(milliseconds: 800),
+              curve: Curves.easeInOutCubic,
+              PieChartData(
+                centerSpaceRadius: double.nan,
+                startDegreeOffset: -90,
+                sectionsSpace: 2,
+                sections: data.map((item) {
+                  return PieChartSectionData(
+                    color: Colors.red,
+                    value: item['amount'],
+                    title: "${item['amount']}%",
+                    titleStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    radius: 30,
+                    titlePositionPercentageOffset: -0.5,
+                  );
+                }).toList(),
               ),
-              radius: 30,
-              titlePositionPercentageOffset: -0.5,
             );
-          }).toList(),
-        ),
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
       ),
     );
   }
@@ -329,3 +345,18 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
     );
   }
 }
+
+
+// expensePieChartData.map((item) {
+//             return PieChartSectionData(
+//               value: item['value'],
+//               color: item['color'],
+//               title: item['title'],
+//               titleStyle: TextStyle(
+//                 color: Colors.black,
+//                 fontWeight: FontWeight.bold,
+//               ),
+//               radius: 30,
+//               titlePositionPercentageOffset: -0.5,
+//             );
+//           }).toList(),
