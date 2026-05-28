@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-Widget chartBreakDownCard() {
+Container chartBreakDownCard(String category, int amount, double percentage) {
   return Container(
     margin: EdgeInsets.symmetric(horizontal: 12),
     padding: EdgeInsets.all(10),
@@ -46,7 +46,7 @@ Widget chartBreakDownCard() {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    'Food',
+                    category,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -64,7 +64,7 @@ Widget chartBreakDownCard() {
                     progressColor: AppColors.boxRed,
                     barRadius: Radius.circular(10),
                     trailing: Text(
-                      '40%',
+                      '$percentage%',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -75,8 +75,12 @@ Widget chartBreakDownCard() {
         ),
 
         Text(
-          '5800.00 LKR',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          '$amount.00 LKR',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Saira',
+          ),
         ),
       ],
     ),

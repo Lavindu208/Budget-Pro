@@ -1,4 +1,5 @@
 import 'package:budget_pro/domain/bloc/show_details_on_chart_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:budget_pro/presentation/components/chart_breakdown_card.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -75,7 +76,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
               _expensePieChart(),
               SizedBox(height: 15),
               Container(
-                width: 250,
+                // width: 300,
                 alignment: Alignment.center,
                 child: _expensePieChartProperties(),
               ),
@@ -85,100 +86,159 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
         SizedBox(height: 15),
         spendingBreakDown(),
         SizedBox(height: 20),
-        chartBreakDownCard(),
+        // BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+        //   builder: (context, state) {
+        //     if (state is DataInit) {
+        //       return CircularProgressIndicator();
+        //     } else if (state is DataLoading) {
+        //       return CircularProgressIndicator();
+        //     } else if (state is DataLoaded) {
+        //       List<Map<String, dynamic>> data = state.chartDataList;
+        //       data.map((item) {
+        //         return chartBreakDownCard('Food', 100, 10.0);
+        //       }).toList();
+        //     }
+        //     return CircularProgressIndicator();
+        //   },
+        // ),
       ],
     );
   }
 
-  List<Map<String, dynamic>> expensePieChartData = [
-    {'value': 40.0, 'color': ChartColors.red, 'title': '40%'},
-    {'value': 24.0, 'color': ChartColors.orange, 'title': '24%'},
-    {'value': 19.0, 'color': ChartColors.yellow, 'title': '19%'},
-    {'value': 7.0, 'color': ChartColors.lightGreen, 'title': '7%'},
-    {'value': 10.0, 'color': ChartColors.darkGreen, 'title': '10%'},
-  ];
-
   Widget _expensePieChart() {
-    return SizedBox(
-      width: 210,
-      height: 210,
-      child: BlocBuilder<ShowDetailsOnChartCubit, DataState>(
-        builder: (context, state) {
-          if (state is DataInit) {
-            return CircularProgressIndicator();
-          } else if (state is DataLoading) {
-            return CircularProgressIndicator();
-          } else if (state is DataLoaded) {
-            List<Map<String, dynamic>> data = state.chartDataList;
+    return Stack(
+      alignment: Alignment.center,
 
-            return PieChart(
-              duration: Duration(milliseconds: 800),
-              curve: Curves.easeInOutCubic,
-              PieChartData(
-                centerSpaceRadius: double.nan,
-                startDegreeOffset: -90,
-                sectionsSpace: 2,
-                sections: data.map((item) {
-                  return PieChartSectionData(
-                    color: Colors.red,
-                    value: item['amount'],
-                    title: "${item['amount']}%",
-                    titleStyle: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    radius: 30,
-                    titlePositionPercentageOffset: -0.5,
-                  );
-                }).toList(),
-              ),
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
-      ),
+      children: [
+        Column(
+          children: [
+            Text(
+              'Total',
+              style: TextStyle(color: const Color.fromARGB(255, 114, 114, 114)),
+            ),
+            BlocBuilder<ShowTotalExpenseCubit, int>(
+              builder: (context, state) {
+                return Text(
+                  state.toString(),
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Saira',
+                  ),
+                );
+              },
+            ),
+            Text(
+              'spent',
+              style: TextStyle(color: const Color.fromARGB(255, 114, 114, 114)),
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 210,
+          height: 210,
+          child: BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+            builder: (context, state) {
+              if (state is DataInit) {
+                return CircularProgressIndicator();
+              } else if (state is DataLoading) {
+                return CircularProgressIndicator();
+              } else if (state is DataLoaded) {
+                List<Map<String, dynamic>> data = state.chartDataList;
+
+                return PieChart(
+                  duration: Duration(milliseconds: 800),
+                  curve: Curves.easeInOutCubic,
+                  PieChartData(
+                    centerSpaceRadius: double.nan,
+                    startDegreeOffset: -90,
+                    sectionsSpace: 2,
+                    sections: data.map((item) {
+                      return PieChartSectionData(
+                        color: item['color'],
+                        value: item['percentage'],
+                        showTitle: false,
+                        titleStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        radius: 30,
+                        titlePositionPercentageOffset: -0.5,
+                      );
+                    }).toList(),
+                  ),
+                );
+              } else {
+                return CircularProgressIndicator();
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  List<Map<String, dynamic>> expenseChartProperties = [
-    {'color': ChartColors.red, 'category': 'Food'},
-    {'color': ChartColors.orange, 'category': 'Transportation'},
-    {'color': ChartColors.lightGreen, 'category': 'Sport'},
-    {'color': ChartColors.yellow, 'category': 'Education'},
-    {'color': ChartColors.darkGreen, 'category': 'Others'},
-  ];
-
   Widget _expensePieChartProperties() {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3.8,
-      ),
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: expenseChartProperties.length,
-      itemBuilder: (BuildContext context, int index) {
-        final item = expenseChartProperties[index];
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 15,
-              height: 15,
-              decoration: BoxDecoration(
-                color: item['color'],
-                borderRadius: BorderRadius.circular(20),
-              ),
+    return BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+      builder: (context, state) {
+        if (state is DataInit) {
+          return CircularProgressIndicator();
+        } else if (state is DataLoading) {
+          return CircularProgressIndicator();
+        } else if (state is DataLoaded) {
+          List<Map<String, dynamic>> data = state.chartDataList;
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: 50,
+              // childAspectRatio: 3.8,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
             ),
-            SizedBox(width: 5),
-            Text(
-              item['category'],
-              style: TextStyle(fontWeight: FontWeight.w400),
-            ),
-          ],
-        );
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              final item = data[index];
+              return Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 241, 241, 241),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 15,
+                      height: 15,
+                      decoration: BoxDecoration(
+                        color: item['color'],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Row(
+                      children: [
+                        Text(
+                          item['category'],
+                          style: TextStyle(fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(width: 7),
+                        Text(
+                          '${item['percentage'].toString()}%',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+        return CircularProgressIndicator();
       },
     );
   }
@@ -264,7 +324,21 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
         SizedBox(height: 20),
         spendingBreakDown(),
         SizedBox(height: 20),
-        chartBreakDownCard(),
+        // BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+        //   builder: (context, state) {
+        //     if (state is DataLoaded) {
+        //       List<Map<String, dynamic>> data = state.chartDataList;
+        //       data.map((item) {
+        //         return chartBreakDownCard(
+        //           item['category'],
+        //           item['amount'],
+        //           item['percentage'],
+        //         );
+        //       }).toList();
+        //     }
+        //     return CircularProgressIndicator();
+        //   },
+        // ),
       ],
     );
   }

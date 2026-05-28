@@ -1,5 +1,6 @@
 import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:budget_pro/domain/expense_repository.dart';
+import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChartDataService {
@@ -9,50 +10,40 @@ class ChartDataService {
   ChartDataService(this._expenseRepository, this._chartDataCalculator);
 
   Future<List<Map<String, dynamic>>> getChartData() async {
-    final expenses = await _expenseRepository.getData().first;
+    final expenseList = await _expenseRepository.getData().first;
+    List<ExpenseItem> expenses = List.from(expenseList);
+    List<Color> colorList = ChartColors.chartColorList;
 
     final totalOfEachCategory = _chartDataCalculator
         .calcTotalAmountOfEachCategory(expenses);
     final sortedExpensesList = _chartDataCalculator
         .sortExpenseListInAscendingOrder(totalOfEachCategory);
-    debugPrint("sorted list : $sortedExpensesList");
-    final selectedExpenseList = sortedExpensesList.sublist(0, 5);
-    debugPrint("Selected expense list : $selectedExpenseList");
+    final selectedExpenseList = sortedExpensesList.length > 5
+        ? sortedExpensesList.sublist(0, 5)
+        : sortedExpensesList;
     final totalAmount = _chartDataCalculator.calcTotalAmount(
       selectedExpenseList,
     );
-    // debugPrint("total amount : $totalAmount");
-    final chartExpenseList = _chartDataCalculator.calcPercentageOfEachCategory(
-      totalAmount,
-      selectedExpenseList,
+    final chartItemsWithPercentage = _chartDataCalculator
+        .calcPercentageOfEachCategory(totalAmount, selectedExpenseList);
+    final chartExpenseList = _chartDataCalculator.makeFinalChartExpenseList(
+      chartItemsWithPercentage,
+      colorList,
     );
-    // debugPrint("chart expense list : $chartExpenseList");
     return chartExpenseList;
   }
 }
 
 class ChartDataCalculator {
   List<Map<String, dynamic>> sortExpenseListInAscendingOrder(
-    List<Map<String, dynamic>> expenses,
+    List<Map<String, dynamic>> localExpenses,
   ) {
-    List<Map<String, dynamic>> localExpenses = List.from(expenses);
+    localExpenses.sort((a, b) {
+      int aAmount = int.tryParse(a['amount']?.toString() ?? '') ?? 0;
+      int bAmount = int.tryParse(b['amount']?.toString() ?? '') ?? 0;
+      return bAmount.compareTo(aAmount);
+    });
 
-    void insertionSortDescending(List<Map<String, dynamic>> list) {
-      for (int i = 1; i < list.length; i++) {
-        Map<String, dynamic> key = list[i];
-        int j = i - 1;
-
-        int currentAmount = int.parse(key['amount']);
-        while (j >= 0 && int.parse(list[j]['amount']) < currentAmount) {
-          list[j + 1] = list[j];
-          j--;
-        }
-        list[j + 1] = key;
-      }
-    }
-
-    insertionSortDescending(localExpenses);
-    // debugPrint("sorted list : $localExpenses");
     return localExpenses;
   }
 
@@ -69,20 +60,15 @@ class ChartDataCalculator {
           total += int.parse(expense.amount);
         }
       }
-      totalAmountOfCategory.add({
-        'category': category.label.toLowerCase(),
-        'amount': total,
-      });
+      totalAmountOfCategory.add({'category': category.label, 'amount': total});
     }
-    // print("Total amount of each category : $totalAmountOfCategory");
     return totalAmountOfCategory;
   }
 
   int calcTotalAmount(List<Map<String, dynamic>> expenseList) {
     int total = 0;
-    debugPrint("total : $total");
     for (Map item in expenseList) {
-      total += int.parse(item['amount']);
+      total += int.tryParse(item['amount']?.toString() ?? '') ?? 0;
     }
 
     return total;
@@ -94,11 +80,26 @@ class ChartDataCalculator {
   ) {
     double percentage = 0;
     for (Map item in selectedExpenseList) {
-      percentage = ((100 / total) * double.parse(item['amount']))
-          .floorToDouble();
-      item['amount'] = percentage;
+      percentage =
+          ((100 / total) *
+                  (double.tryParse(item['amount']?.toString() ?? '') ?? 0))
+              .floorToDouble();
+      item['percentage'] = percentage;
     }
 
     return selectedExpenseList;
+  }
+
+  List<Map<String, dynamic>> makeFinalChartExpenseList(
+    List<Map<String, dynamic>> expenseList,
+    List<Color> chartColorList,
+  ) {
+    int i = 0;
+    for (Map item in expenseList) {
+      item['color'] = chartColorList[i];
+      i++;
+    }
+
+    return expenseList;
   }
 }

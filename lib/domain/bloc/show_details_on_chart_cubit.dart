@@ -5,9 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 sealed class DataState {}
 
-class DataInit extends DataState {
-  List<Map<String, dynamic>> emptyList = [];
-}
+class DataInit extends DataState {}
 
 class DataLoading extends DataState {}
 
@@ -35,8 +33,7 @@ class ShowDetailsOnChartCubit extends Cubit<DataState> {
           .getChartData();
       emit(DataLoaded(chartDataList));
     } catch (e) {
-      DataError("Error occurred while processing chart data : $e");
-      debugPrint("error occurred while getting chart data");
+      debugPrint("error occurred while loading chart data");
     }
   }
 }

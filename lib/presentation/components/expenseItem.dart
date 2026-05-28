@@ -18,72 +18,88 @@ Widget expenseItem(
       children: [
         Row(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        color: AppColors.boxGreen,
-                        borderRadius: BorderRadius.circular(50),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: AppColors.boxGreen,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Center(
+                          child: Icon(icon, size: 20, color: Colors.white),
+                        ),
                       ),
-                      child: Center(
-                        child: Icon(icon, size: 20, color: Colors.white),
-                      ),
-                    ),
-                    isSelectedItem
-                        ? Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  width: 19,
-                                  height: 19,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(100),
+                      isSelectedItem
+                          ? Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 19,
+                                    height: 19,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                  ),
+                                  Icon(
+                                    FontAwesomeIcons.solidCircleCheck,
+                                    size: 19,
+                                    color: AppColors.navigatorColor,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                          itemName,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        note == 'unknown'
+                            ? SizedBox()
+                            : SizedBox(
+                                width: double.infinity,
+                                child: Text(
+                                  note,
+                                  softWrap: true,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      122,
+                                      122,
+                                      122,
+                                    ),
                                   ),
                                 ),
-                                Icon(
-                                  FontAwesomeIcons.solidCircleCheck,
-                                  size: 19,
-                                  color: AppColors.navigatorColor,
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                  ],
-                ),
-                SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      itemName,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
+                              ),
+                      ],
                     ),
-                    SizedBox(height: 2),
-                    note == 'unknown'
-                        ? SizedBox()
-                        : Text(
-                            note,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: const Color.fromARGB(255, 122, 122, 122),
-                            ),
-                          ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
             Spacer(),
             Text(

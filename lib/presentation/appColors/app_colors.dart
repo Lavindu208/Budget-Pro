@@ -13,6 +13,14 @@ class ChartColors {
   static const Color yellow = Color(0xFFE0D124);
   static const Color lightGreen = Color(0xFF9EBC3E);
   static const Color darkGreen = Color(0xFF56AD77);
+
+  static const List<Color> chartColorList = [
+    red,
+    orange,
+    yellow,
+    lightGreen,
+    darkGreen,
+  ];
 }
 
 class HomeCharColors {

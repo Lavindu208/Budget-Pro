@@ -21,19 +21,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final AppBar appBar = AppBar(title: const Text('Height Calculation'));
-    double screenHeight() {
-      double totalHeight = MediaQuery.of(context).size.height;
-      double statusBarHeight = MediaQuery.of(context).padding.top;
-      double appBarHeight = appBar.preferredSize.height;
-      double availableHeight = totalHeight - statusBarHeight - appBarHeight;
-      return availableHeight;
-    }
-
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
-          height: screenHeight(),
+          // height: screenHeight(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(
