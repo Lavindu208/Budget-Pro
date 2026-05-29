@@ -1,11 +1,11 @@
 import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:budget_pro/domain/expense_repository.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ChartDataService {
   final ExpenseRepository _expenseRepository;
-  final ChartDataCalculator _chartDataCalculator;
+  final ExpenseChartDataCalculator _chartDataCalculator;
 
   ChartDataService(this._expenseRepository, this._chartDataCalculator);
 
@@ -18,14 +18,14 @@ class ChartDataService {
         .calcTotalAmountOfEachCategory(expenses);
     final sortedExpensesList = _chartDataCalculator
         .sortExpenseListInAscendingOrder(totalOfEachCategory);
-    final selectedExpenseList = sortedExpensesList.length > 5
-        ? sortedExpensesList.sublist(0, 5)
-        : sortedExpensesList;
+    final selectedExpenseList = sortedExpensesList.sublist(0, 5);
+    final finalSelectedExpenseList = _chartDataCalculator
+        .removeUnnecessaryExpenses(selectedExpenseList);
     final totalAmount = _chartDataCalculator.calcTotalAmount(
-      selectedExpenseList,
+      finalSelectedExpenseList,
     );
     final chartItemsWithPercentage = _chartDataCalculator
-        .calcPercentageOfEachCategory(totalAmount, selectedExpenseList);
+        .calcPercentageOfEachCategory(totalAmount, finalSelectedExpenseList);
     final chartExpenseList = _chartDataCalculator.makeFinalChartExpenseList(
       chartItemsWithPercentage,
       colorList,
@@ -34,7 +34,7 @@ class ChartDataService {
   }
 }
 
-class ChartDataCalculator {
+class ExpenseChartDataCalculator {
   List<Map<String, dynamic>> sortExpenseListInAscendingOrder(
     List<Map<String, dynamic>> localExpenses,
   ) {
@@ -72,6 +72,21 @@ class ChartDataCalculator {
     }
 
     return total;
+  }
+
+  List<Map<String, dynamic>> removeUnnecessaryExpenses(
+    List<Map<String, dynamic>> selectedList,
+  ) {
+    List<Map<String, dynamic>> filteredExpenses = [];
+    for (Map item in selectedList) {
+      int amount = int.tryParse(item['amount'].toString()) ?? 0;
+      if (amount != 0) {
+        filteredExpenses.add(item as Map<String, dynamic>);
+      } else {
+        break;
+      }
+    }
+    return filteredExpenses;
   }
 
   List<Map<String, dynamic>> calcPercentageOfEachCategory(

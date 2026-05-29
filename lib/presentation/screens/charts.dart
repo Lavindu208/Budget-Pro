@@ -1,4 +1,5 @@
-import 'package:budget_pro/domain/bloc/show_details_on_chart_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_details_on_expense_chart_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_details_on_income_chart_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:budget_pro/presentation/components/chart_breakdown_card.dart';
@@ -86,7 +87,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
         SizedBox(height: 15),
         spendingBreakDown(),
         SizedBox(height: 20),
-        // BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+        // BlocBuilder<ShowDetailsOnExpenseChartCubit, DataState>(
         //   builder: (context, state) {
         //     if (state is DataInit) {
         //       return CircularProgressIndicator();
@@ -110,34 +111,46 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
       alignment: Alignment.center,
 
       children: [
-        Column(
-          children: [
-            Text(
-              'Total',
-              style: TextStyle(color: const Color.fromARGB(255, 114, 114, 114)),
-            ),
-            BlocBuilder<ShowTotalExpenseCubit, int>(
-              builder: (context, state) {
-                return Text(
-                  state.toString(),
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Saira',
+        BlocBuilder<ShowDetailsOnExpenseChartCubit, DataState>(
+          builder: (context, state) {
+            if (state is DataLoaded) {
+              return Column(
+                children: [
+                  Text(
+                    'Total',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 114, 114, 114),
+                    ),
                   ),
-                );
-              },
-            ),
-            Text(
-              'spent',
-              style: TextStyle(color: const Color.fromARGB(255, 114, 114, 114)),
-            ),
-          ],
+                  BlocBuilder<ShowTotalExpenseCubit, int>(
+                    builder: (context, state) {
+                      return Text(
+                        state.toString(),
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Saira',
+                        ),
+                      );
+                    },
+                  ),
+                  Text(
+                    'spent',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 114, 114, 114),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return SizedBox();
+            }
+          },
         ),
         SizedBox(
           width: 210,
           height: 210,
-          child: BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+          child: BlocBuilder<ShowDetailsOnExpenseChartCubit, DataState>(
             builder: (context, state) {
               if (state is DataInit) {
                 return CircularProgressIndicator();
@@ -168,8 +181,50 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
                     }).toList(),
                   ),
                 );
+              } else if (state is DataEmpty) {
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 230, 230, 230),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 235, 235, 235),
+                        width: 1,
+                        style: BorderStyle.solid,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          spreadRadius: 2,
+                          blurRadius: 15,
+                          color: const Color.fromARGB(17, 0, 0, 0),
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.circleExclamation,
+                          color: const Color.fromARGB(255, 129, 129, 129),
+                          size: 30,
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            state.message,
+                            textAlign: TextAlign.center,
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               } else {
-                return CircularProgressIndicator();
+                return Center(child: Text('Something went wrong!'));
               }
             },
           ),
@@ -179,7 +234,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
   }
 
   Widget _expensePieChartProperties() {
-    return BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+    return BlocBuilder<ShowDetailsOnExpenseChartCubit, DataState>(
       builder: (context, state) {
         if (state is DataInit) {
           return CircularProgressIndicator();
@@ -211,26 +266,31 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 15,
-                      height: 15,
+                      width: 12,
+                      height: 12,
                       decoration: BoxDecoration(
                         color: item['color'],
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     SizedBox(width: 5),
-                    Row(
-                      children: [
-                        Text(
-                          item['category'],
-                          style: TextStyle(fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          '${item['percentage'].toString()}%',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text(
+                            item['category'],
+                            style: TextStyle(fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(width: 7),
+                          Text(
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            '${item['percentage'].toString()}%',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -238,7 +298,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
             },
           );
         }
-        return CircularProgressIndicator();
+        return SizedBox();
       },
     );
   }
@@ -324,7 +384,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
         SizedBox(height: 20),
         spendingBreakDown(),
         SizedBox(height: 20),
-        // BlocBuilder<ShowDetailsOnChartCubit, DataState>(
+        // BlocBuilder<ShowDetailsOnExpenseChartCubit, DataState>(
         //   builder: (context, state) {
         //     if (state is DataLoaded) {
         //       List<Map<String, dynamic>> data = state.chartDataList;
@@ -343,38 +403,130 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
     );
   }
 
-  List<Map<String, dynamic>> incomePieChartData = [
-    {'value': 40.0, 'color': ChartColors.red, 'title': '40%'},
-    {'value': 24.0, 'color': ChartColors.orange, 'title': '24%'},
-    {'value': 10.0, 'color': ChartColors.yellow, 'title': '10%'},
-  ];
+  Stack _incomePieChart() {
+    return Stack(
+      alignment: Alignment.center,
 
-  Widget _incomePieChart() {
-    return SizedBox(
-      width: 210,
-      height: 210,
-      child: PieChart(
-        duration: Duration(milliseconds: 800),
-        curve: Curves.easeInOutCubic,
-        PieChartData(
-          centerSpaceRadius: double.nan,
-          startDegreeOffset: -90,
-          sectionsSpace: 2,
-          sections: incomePieChartData.map((item) {
-            return PieChartSectionData(
-              value: item['value'],
-              color: item['color'],
-              title: item['title'],
-              titleStyle: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              radius: 30,
-              titlePositionPercentageOffset: -0.5,
-            );
-          }).toList(),
+      children: [
+        BlocBuilder<ShowDetailsOnIncomeChartCubit, IncomeDataState>(
+          builder: (context, state) {
+            if (state is DataLoaded) {
+              return Column(
+                children: [
+                  Text(
+                    'Total',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 114, 114, 114),
+                    ),
+                  ),
+                  BlocBuilder<ShowTotalExpenseCubit, int>(
+                    builder: (context, state) {
+                      return Text(
+                        state.toString(),
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Saira',
+                        ),
+                      );
+                    },
+                  ),
+                  Text(
+                    'spent',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 114, 114, 114),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return SizedBox();
+            }
+          },
         ),
-      ),
+        SizedBox(
+          width: 210,
+          height: 210,
+          child: BlocBuilder<ShowDetailsOnIncomeChartCubit, IncomeDataState>(
+            builder: (context, state) {
+              if (state is IncomeDataInit) {
+                return CircularProgressIndicator();
+              } else if (state is IncomeDataLoading) {
+                return CircularProgressIndicator();
+              } else if (state is IncomeDataLoaded) {
+                List<Map<String, dynamic>> data = state.chartDataList;
+
+                return PieChart(
+                  duration: Duration(milliseconds: 800),
+                  curve: Curves.easeInOutCubic,
+                  PieChartData(
+                    centerSpaceRadius: double.nan,
+                    startDegreeOffset: -90,
+                    sectionsSpace: 2,
+                    sections: data.map((item) {
+                      return PieChartSectionData(
+                        color: item['color'],
+                        value: item['percentage'],
+                        showTitle: false,
+                        titleStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        radius: 30,
+                        titlePositionPercentageOffset: -0.5,
+                      );
+                    }).toList(),
+                  ),
+                );
+              } else if (state is IncomeDataEmpty) {
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 230, 230, 230),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 235, 235, 235),
+                        width: 1,
+                        style: BorderStyle.solid,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          spreadRadius: 2,
+                          blurRadius: 15,
+                          color: const Color.fromARGB(17, 0, 0, 0),
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.circleExclamation,
+                          color: const Color.fromARGB(255, 129, 129, 129),
+                          size: 30,
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            state.message,
+                            textAlign: TextAlign.center,
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                return Center(child: Text('Something went wrong!'));
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -385,36 +537,66 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
   ];
 
   Widget _incomePieChartProperties() {
-    return GridView.builder(
-      itemCount: incomeChartProperties.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3.5,
-      ),
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        final item = incomeChartProperties[index];
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 15,
-              height: 15,
-              decoration: BoxDecoration(
-                color: item['color'],
-                borderRadius: BorderRadius.circular(20),
-              ),
+    return BlocBuilder<ShowDetailsOnIncomeChartCubit, IncomeDataState>(
+      builder: (context, state) {
+        if (state is IncomeDataInit) {
+          return CircularProgressIndicator();
+        } else if (state is IncomeDataLoading) {
+          return CircularProgressIndicator();
+        } else if (state is IncomeDataLoaded) {
+          List<Map<String, dynamic>> data = state.chartDataList;
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: 50,
+              // childAspectRatio: 3.8,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
             ),
-            SizedBox(width: 5),
-            Text(
-              item['category'],
-              style: TextStyle(fontWeight: FontWeight.w400),
-              softWrap: true,
-            ),
-          ],
-        );
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              final item = data[index];
+              return Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 241, 241, 241),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 15,
+                      height: 15,
+                      decoration: BoxDecoration(
+                        color: item['color'],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Row(
+                      children: [
+                        Text(
+                          item['category'],
+                          style: TextStyle(fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(width: 7),
+                        Text(
+                          '${item['percentage'].toString()}%',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+        return SizedBox();
       },
     );
   }

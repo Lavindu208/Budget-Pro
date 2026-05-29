@@ -4,7 +4,8 @@ import 'package:budget_pro/domain/bloc/add_new_expense_bloc.dart';
 import 'package:budget_pro/domain/bloc/add_new_income_bloc.dart';
 import 'package:budget_pro/domain/bloc/bottomNavigator/navigator_event.dart';
 import 'package:budget_pro/domain/bloc/calculate_income_expense_balance_cubit.dart';
-import 'package:budget_pro/domain/bloc/show_details_on_chart_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_details_on_expense_chart_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_details_on_income_chart_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_total_income_cubit.dart';
 import 'package:budget_pro/domain/bloc/date_selector.dart';
@@ -100,7 +101,14 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider(
                   create: (context) =>
-                      ShowDetailsOnChartCubit()..displayDetails(),
+                      ShowDetailsOnExpenseChartCubit()..displayDetails(),
+                  lazy: false,
+                ),
+                BlocProvider(
+                  create: (context) => ShowDetailsOnIncomeChartCubit(
+                    expenseChartCubit: context
+                        .read<ShowDetailsOnExpenseChartCubit>(),
+                  ),
                   lazy: false,
                 ),
               ],
