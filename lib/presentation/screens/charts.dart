@@ -1,6 +1,7 @@
 import 'package:budget_pro/domain/bloc/show_details_on_expense_chart_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_details_on_income_chart_cubit.dart';
 import 'package:budget_pro/domain/bloc/show_total_expense_cubit.dart';
+import 'package:budget_pro/domain/bloc/show_total_income_cubit.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
 import 'package:budget_pro/presentation/components/chart_breakdown_card.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -375,7 +376,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
               SizedBox(height: 15),
               Container(
                 alignment: Alignment.center,
-                width: 220,
+                // width: 220,
                 child: _incomePieChartProperties(),
               ),
             ],
@@ -410,7 +411,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
       children: [
         BlocBuilder<ShowDetailsOnIncomeChartCubit, IncomeDataState>(
           builder: (context, state) {
-            if (state is DataLoaded) {
+            if (state is IncomeDataLoaded) {
               return Column(
                 children: [
                   Text(
@@ -419,7 +420,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
                       color: const Color.fromARGB(255, 114, 114, 114),
                     ),
                   ),
-                  BlocBuilder<ShowTotalExpenseCubit, int>(
+                  BlocBuilder<ShowTotalIncomeCubit, int>(
                     builder: (context, state) {
                       return Text(
                         state.toString(),
@@ -432,7 +433,7 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
                     },
                   ),
                   Text(
-                    'spent',
+                    'income',
                     style: TextStyle(
                       color: const Color.fromARGB(255, 114, 114, 114),
                     ),
@@ -530,12 +531,6 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
     );
   }
 
-  List<Map<String, dynamic>> incomeChartProperties = [
-    {'color': ChartColors.red, 'category': 'Salary'},
-    {'color': ChartColors.orange, 'category': 'Investments'},
-    {'color': ChartColors.yellow, 'category': 'Part time'},
-  ];
-
   Widget _incomePieChartProperties() {
     return BlocBuilder<ShowDetailsOnIncomeChartCubit, IncomeDataState>(
       builder: (context, state) {
@@ -601,18 +596,3 @@ class _ChartsState extends State<Charts> with SingleTickerProviderStateMixin {
     );
   }
 }
-
-
-// expensePieChartData.map((item) {
-//             return PieChartSectionData(
-//               value: item['value'],
-//               color: item['color'],
-//               title: item['title'],
-//               titleStyle: TextStyle(
-//                 color: Colors.black,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//               radius: 30,
-//               titlePositionPercentageOffset: -0.5,
-//             );
-//           }).toList(),

@@ -57,7 +57,8 @@ class ShowDetailsOnIncomeChartCubit extends Cubit<IncomeDataState> {
         List<Map<String, dynamic>> chartDataList = await _chartDataService
             .getChartData();
         if (chartDataList.length < 2) {
-          emit(IncomeDataEmpty("Add more expenses to see chart analytics"));
+          emit(IncomeDataEmpty("Add more incomes to see chart analytics"));
+          debugPrint("Chart data list : $chartDataList");
         } else {
           emit(IncomeDataLoaded(chartDataList));
         }

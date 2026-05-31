@@ -1,4 +1,3 @@
-import 'package:budget_pro/data/models/expense_item.dart';
 import 'package:budget_pro/data/models/income_item.dart';
 import 'package:budget_pro/domain/income_repository.dart';
 import 'package:budget_pro/presentation/appColors/app_colors.dart';
@@ -13,13 +12,18 @@ class ChartDataService {
   Future<List<Map<String, dynamic>>> getChartData() async {
     final incomeList = await _incomeRepository.getData().first;
     List<IncomeItem> incomes = List.from(incomeList);
+    // for (IncomeItem item in incomes) {
+    //   debugPrint("amount : ${item.amount}\ncategory : ${item.category}");
+    // }
     List<Color> colorList = ChartColors.chartColorList;
 
     final totalOfEachCategory = _incomeChartDataCalculator
         .calcTotalAmountOfEachCategory(incomes);
+    debugPrint("total : $totalOfEachCategory");
     final sortedIncomeList = _incomeChartDataCalculator
         .sortExpenseListInAscendingOrder(totalOfEachCategory);
     final selectedIncomeList = sortedIncomeList.sublist(0, 5);
+    debugPrint("selected income list : $selectedIncomeList");
     final finalSelectedIncomeList = _incomeChartDataCalculator
         .removeUnnecessaryExpenses(selectedIncomeList);
     final totalAmount = _incomeChartDataCalculator.calcTotalAmount(

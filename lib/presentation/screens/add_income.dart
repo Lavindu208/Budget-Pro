@@ -15,7 +15,7 @@ class AddIncome extends StatefulWidget {
 class _AddIncome extends State<AddIncome> {
   List<Map<String, dynamic>> incomeItems = [
     {'icon': FontAwesomeIcons.moneyBill, 'category': 'Salary'},
-    {'icon': FontAwesomeIcons.chartBar, 'category': 'Investments'},
+    {'icon': FontAwesomeIcons.chartBar, 'category': 'Investment'},
     {'icon': FontAwesomeIcons.clock, 'category': 'PartTime'},
     {'icon': FontAwesomeIcons.plus, 'category': 'Add New'},
   ];

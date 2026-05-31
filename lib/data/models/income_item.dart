@@ -29,7 +29,7 @@ class IncomeItem {
 
 enum IncomeCategory {
   salary(FontAwesomeIcons.moneyBill, 'Salary'),
-  investments(FontAwesomeIcons.chartBar, 'Investment'),
+  investment(FontAwesomeIcons.chartBar, 'Investment'),
   partTime(FontAwesomeIcons.clock, 'Part Time'),
   addNew(FontAwesomeIcons.plus, 'Add New'),
   unknown(FontAwesomeIcons.question, 'Unknown');
